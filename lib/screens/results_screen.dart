@@ -9,7 +9,7 @@ import 'conclusion_screen.dart';
 
 class ResultsScreen extends StatefulWidget {
   final List<TarotCardModel> selected;
-  final String topic;
+  final List<String> topics;
   final String name;
   final DateTime birthDate;
   final String gender;
@@ -17,7 +17,7 @@ class ResultsScreen extends StatefulWidget {
   const ResultsScreen({
     super.key,
     required this.selected,
-    required this.topic,
+    required this.topics,
     required this.name,
     required this.birthDate,
     required this.gender,
@@ -46,7 +46,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         name: widget.name,
         birthDate: DateFormat('yyyy-MM-dd').format(widget.birthDate),
         gender: widget.gender,
-        topic: widget.topic,
+        topic: widget.topics.join(', '),
         cards: cardNames,
       );
       if (mounted) {
@@ -201,7 +201,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                                         MaterialPageRoute(
                                                           builder: (_) => ConclusionScreen(
                                                             selected: widget.selected,
-                                                            topic: widget.topic,
+                                                            topics: widget.topics,
                                                             name: widget.name,
                                                             birthDate: widget.birthDate,
                                                             gender: widget.gender,
