@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'screens/form_steps.dart';
+import 'screens/landing_screen.dart';
 
 void main() {
   runApp(const TarotGalaxyApp());
@@ -38,8 +38,8 @@ class TarotGalaxyApp extends StatelessWidget {
         ),
         dialogBackgroundColor: const Color(0xff1B2735),
       ),
-      // Đặt màn hình khởi đầu là FormStepsScreen
-      home: const FormStepsScreen(),
+      // Đặt màn hình khởi đầu là LandingScreen
+      home: const LandingScreen(),
     );
   }
 }
