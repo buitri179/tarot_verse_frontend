@@ -7,7 +7,7 @@ import '../services/tarot_service.dart';
 
 class ConclusionScreen extends StatefulWidget {
   final List<TarotCardModel> selected;
-  final String topic;
+  final List<String> topics;
   final String name;
   final DateTime birthDate;
   final String gender;
@@ -15,7 +15,7 @@ class ConclusionScreen extends StatefulWidget {
   const ConclusionScreen({
     super.key,
     required this.selected,
-    required this.topic,
+    required this.topics,
     required this.name,
     required this.birthDate,
     required this.gender,
@@ -42,7 +42,7 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
         name: widget.name,
         birthDate: DateFormat('yyyy-MM-dd').format(widget.birthDate),
         gender: widget.gender,
-        topic: widget.topic,
+        topic: widget.topics.join(', '),
         cards: cardNames,
       );
       return response.reading ?? 'Không có kết quả giải bài chi tiết.';
@@ -93,7 +93,7 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Chủ đề: ${widget.topic}', // Sử dụng trực tiếp topic
+                            'Chủ đề: ${widget.topics.join(', ')}', // Sử dụng trực tiếp topic
                             style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 20),

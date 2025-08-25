@@ -7,14 +7,14 @@ import 'results_screen.dart';
 import '../services/tarot_service.dart';
 
 class DeckScreen extends StatefulWidget {
-  final String topic;
+  final List<String> topics;
   final String name;
   final DateTime birthDate;
   final String gender;
 
   const DeckScreen({
     super.key,
-    required this.topic,
+    required this.topics,
     required this.name,
     required this.birthDate,
     required this.gender,
@@ -238,7 +238,7 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
                             MaterialPageRoute(
                               builder: (_) => ResultsScreen(
                                 selected: fetchedCards,
-                                topic: widget.topic,
+                                topics: widget.topics,
                                 name: widget.name,
                                 birthDate: widget.birthDate,
                                 gender: widget.gender,

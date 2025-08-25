@@ -16,7 +16,7 @@ class _FormStepsScreenState extends State<FormStepsScreen> {
   final nameCtrl = TextEditingController();
   DateTime? birthdate;
   String? gender;
-  String? topic;
+  List<String> selectedTopics = [];
 
   void next() {
     if (step == 1) {
@@ -264,53 +264,73 @@ class _FormStepsScreenState extends State<FormStepsScreen> {
     ],
   );
 
-  Widget _step4() => Column(
-    children: [
-      Text('Chủ Đề Bói',
-          style: GoogleFonts.cinzelDecorative(fontSize: 22)),
-      const SizedBox(height: 10),
-      Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: DropdownButtonFormField<String>(
-            value: topic,
-            dropdownColor: Colors.black,
-            style: const TextStyle(color: Colors.white),
-            decoration: _decor('Chọn chủ đề bạn quan tâm'),
-            items: const [
-              DropdownMenuItem(value: 'love', child: Text('Tình yêu')),
-              DropdownMenuItem(value: 'career', child: Text('Sự nghiệp')),
-              DropdownMenuItem(value: 'finance', child: Text('Tài chính')),
-              DropdownMenuItem(value: 'health', child: Text('Sức khỏe')),
-              DropdownMenuItem(value: 'spirituality', child: Text('Tâm linh')),
-            ],
-            onChanged: (v) => setState(() => topic = v),
+  Widget _step4() {
+    final topics = {
+      'love': 'Tình yêu',
+      'career': 'Sự nghiệp',
+      'finance': 'Tài chính',
+      'health': 'Sức khỏe',
+      'spirituality': 'Tâm linh',
+    };
+
+    return Column(
+      children: [
+        Text(
+          'Chủ Đề Bói',
+          style: GoogleFonts.cinzelDecorative(fontSize: 22),
+        ),
+        const SizedBox(height: 10),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Column(
+              children: topics.entries.map((entry) {
+                return CheckboxListTile(
+                  activeColor: const Color(0xFFFFD700),
+                  checkColor: Colors.black,
+                  title: Text(
+                    entry.value,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  value: selectedTopics.contains(entry.key),
+                  onChanged: (checked) {
+                    setState(() {
+                      if (checked == true) {
+                        selectedTopics.add(entry.key);
+                      } else {
+                        selectedTopics.remove(entry.key);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
           ),
         ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _goldButton('Quay Lại', back),
-          const SizedBox(width: 12),
-          _goldButton('Bắt Đầu Bói Bài', () {
-            if (topic == null || topic!.isEmpty) {
-              _alert('Vui lòng chọn chủ đề bói');
-              return;
-            }
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => DeckScreen(
-                  topic: topic!,
-                  name: nameCtrl.text,
-                  birthDate: birthdate!,
-                  gender: gender!,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _goldButton('Quay Lại', back),
+            const SizedBox(width: 12),
+            _goldButton('Bắt Đầu Bói Bài', () {
+              if (selectedTopics.isEmpty) {
+                _alert('Vui lòng chọn ít nhất một chủ đề bói');
+                return;
+              }
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => DeckScreen(
+                    topics: selectedTopics,
+                    name: nameCtrl.text,
+                    birthDate: birthdate!,
+                    gender: gender!,
+                  ),
                 ),
-              ),
-            );
-          }),
-        ],
-      )
-    ],
-  );
+              );
+            }),
+          ],
+        )
+      ],
+    );
+  }
 }
