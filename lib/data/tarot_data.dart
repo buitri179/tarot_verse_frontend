@@ -1,26 +1,38 @@
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import '../models/tarot_card.dart';
 
-/// Đây chỉ là data mẫu, bạn có thể mở rộng thêm tất cả 78 lá Tarot.
-final List<TarotCardModel> tarotCardsData = [
-  TarotCardModel(
-    id: 0,
-    name: "The Fool",
-    image: "https://i.imgur.com/5Z3Q2Zr.png", // link ảnh hoặc assets
-    meanings: {
-      "love": "Khởi đầu mới trong tình cảm.",
-      "career": "Cơ hội mới, chưa chắc chắn.",
-      "general": "Hành trình mới, sự ngây thơ, tò mò.",
-    },
-  ),
-  TarotCardModel(
-    id: 1,
-    name: "The Magician",
-    image: "https://i.imgur.com/JQ9p7xD.png",
-    meanings: {
-      "love": "Tự tin trong tình yêu.",
-      "career": "Khả năng biến ý tưởng thành hiện thực.",
-      "general": "Sức mạnh ý chí và sự sáng tạo.",
-    },
-  ),
-  // TODO: thêm các lá khác vào đây...
-];
+class TarotDataService {
+  // Singleton pattern để đảm bảo chỉ có một instance của service này
+  static final TarotDataService _instance = TarotDataService._internal();
+  factory TarotDataService() => _instance;
+  TarotDataService._internal();
+
+  static TarotDataService get instance => _instance;
+
+  List<TarotCardModel> _cards = [];
+
+  // Getter để các phần khác của ứng dụng có thể truy cập danh sách lá bài
+  List<TarotCardModel> get allCards => _cards;
+
+  // Phương thức tải và phân tích tệp JSON
+  Future<void> loadCardsFromJson() async {
+    if (_cards.isNotEmpty) return; // Chỉ tải một lần
+
+    try {
+      // Đọc nội dung tệp JSON từ assets
+      final String jsonString = await rootBundle.loadString('assets/tarot_cards.json');
+      
+      // Phân tích chuỗi JSON thành một List<dynamic>
+      final List<dynamic> jsonList = json.decode(jsonString);
+      
+      // Chuyển đổi mỗi đối tượng JSON thành một TarotCardModel
+      _cards = jsonList.map((jsonItem) => TarotCardModel.fromJson(jsonItem)).toList();
+
+      print('✅ TarotDataService: Successfully loaded ${_cards.length} cards.');
+    } catch (e) {
+      print('❌ TarotDataService: Error loading cards: $e');
+      // Có thể xử lý lỗi ở đây, ví dụ: hiển thị thông báo cho người dùng
+    }
+  }
+}

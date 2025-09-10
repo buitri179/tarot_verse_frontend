@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tarot_verse_frontend/data/tarot_data.dart';
 import 'screens/landing_screen.dart';
 
-void main() {
+Future<void> main() async {
+  // Đảm bảo Flutter đã được khởi tạo
+  WidgetsFlutterBinding.ensureInitialized();
+  // Tải dữ liệu lá bài từ JSON trước khi chạy ứng dụng
+  await TarotDataService.instance.loadCardsFromJson();
+
   runApp(const TarotGalaxyApp());
 }
 

@@ -4,545 +4,545 @@
     "uprightMeaning": "Sự khởi đầu mới, ngây thơ, phiêu lưu, niềm tin",
     "reversedMeaning": "Liều lĩnh, thiếu suy nghĩ, trì hoãn, rủi ro không cần thiết",
     "description": "Lá bài miêu tả một chàng trai trẻ bước đi vô tư với balo và chó, đại diện cho sự tự do và tiềm năng vô hạn.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/90/RWS_Tarot_00_Fool.jpg"
+    "imageUrl": "assets/images/fool.jpg"
   },
   {
     "name": "The Magician",
     "uprightMeaning": "Kỹ năng, sáng tạo, hành động, biểu hiện ý chí",
     "reversedMeaning": "Thao túng, thiếu kế hoạch, tiềm năng chưa khai thác",
     "description": "Người đàn ông với các công cụ biểu tượng, đại diện cho khả năng biến ý tưởng thành hiện thực.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg"
+    "imageUrl": "assets/images/magician.jpg"
   },
   {
     "name": "The High Priestess",
     "uprightMeaning": "Trực giác, bí mật, tiềm thức, sự khôn ngoan nội tại",
     "reversedMeaning": "Bí mật bị che giấu, thiếu trực giác, im lặng",
     "description": "Người phụ nữ ngồi giữa hai cột, đại diện cho sự bí ẩn và kiến thức ẩn giấu.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/8/88/RWS_Tarot_02_High_Priestess.jpg"
+    "imageUrl": "assets/images/high_priestess.jpg"
   },
   {
     "name": "The Empress",
     "uprightMeaning": "Sự phong phú, nuôi dưỡng, nữ tính, sáng tạo",
     "reversedMeaning": "Phụ thuộc, thiếu sáng tạo, nghẹt thở",
     "description": "Người phụ nữ ngồi trên ngai vàng với thiên nhiên, đại diện cho sự sinh sôi và tình mẫu tử.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/d2/RWS_Tarot_03_Empress.jpg"
+    "imageUrl": "assets/images/empress.jpg"
   },
   {
     "name": "The Emperor",
     "uprightMeaning": "Quyền lực, cấu trúc, ổn định, lãnh đạo",
     "reversedMeaning": "Độc tài, cứng nhắc, thiếu kỷ luật",
     "description": "Người đàn ông ngồi trên ngai đá, đại diện cho quyền lực và trật tự.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/c/c3/RWS_Tarot_04_Emperor.jpg"
+    "imageUrl": "assets/images/emperor.jpg"
   },
   {
     "name": "The Hierophant",
     "uprightMeaning": "Truyền thống, giáo dục, niềm tin, hướng dẫn tinh thần",
     "reversedMeaning": "Phản bội, không tuân thủ, ý tưởng mới",
     "description": "Giáo hoàng với hai tín đồ, đại diện cho sự tuân thủ và giáo lý.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/8/8d/RWS_Tarot_05_Hierophant.jpg"
+    "imageUrl": "assets/images/hierophant.jpg"
   },
   {
     "name": "The Lovers",
     "uprightMeaning": "Tình yêu, sự hài hòa, lựa chọn, mối quan hệ",
     "reversedMeaning": "Mất cân bằng, xung đột, lựa chọn sai lầm",
     "description": "Cặp đôi dưới thiên thần, đại diện cho sự kết hợp và quyết định đạo đức.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/db/RWS_Tarot_06_Lovers.jpg"
+    "imageUrl": "assets/images/lovers.jpg"
   },
   {
     "name": "The Chariot",
     "uprightMeaning": "Chiến thắng, ý chí, kiểm soát, thành công",
     "reversedMeaning": "Thiếu hướng đi, thất bại, cản trở",
     "description": "Người đàn ông lái xe ngựa với hai sphinx, đại diện cho sự chinh phục và quyết tâm.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/f/f2/RWS_Tarot_07_Chariot.jpg"
+    "imageUrl": "assets/images/chariot.jpg"
   },
   {
     "name": "Strength",
     "uprightMeaning": "Sức mạnh nội tại, dũng cảm, kiên nhẫn, từ bi",
     "reversedMeaning": "Yếu đuối, thiếu tự tin, sợ hãi",
     "description": "Người phụ nữ vuốt ve sư tử, đại diện cho sức mạnh tinh thần hơn thể chất.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/f/f5/RWS_Tarot_08_Strength.jpg"
+    "imageUrl": "assets/images/strength.jpg"
   },
   {
     "name": "The Hermit",
     "uprightMeaning": "Tìm kiếm nội tâm, cô lập, hướng dẫn, khôn ngoan",
     "reversedMeaning": "Cô đơn, cô lập quá mức, rút lui",
     "description": "Ông già cầm đèn lồng, đại diện cho sự suy tư và tìm kiếm chân lý.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/4/4d/RWS_Tarot_09_Hermit.jpg"
+    "imageUrl": "assets/images/hermit.jpg"
   },
   {
     "name": "Wheel of Fortune",
     "uprightMeaning": "Thay đổi, chu kỳ, số phận, cơ hội",
     "reversedMeaning": "Thay đổi tiêu cực, trì hoãn, kháng cự",
     "description": "Bánh xe quay với các biểu tượng, đại diện cho sự biến đổi của cuộc sống.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg"
+    "imageUrl": "assets/images/wheel_of_fortune.jpg"
   },
   {
     "name": "Justice",
     "uprightMeaning": "Công bằng, sự thật, pháp lý, cân bằng",
     "reversedMeaning": "Bất công, thiếu trách nhiệm, không trung thực",
     "description": "Người phụ nữ cầm kiếm và cán cân, đại diện cho sự công bằng và hậu quả.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/e/e0/RWS_Tarot_11_Justice.jpg"
+    "imageUrl": "assets/images/justice.jpg"
   },
   {
     "name": "The Hanged Man",
     "uprightMeaning": "Hy sinh, buông bỏ, góc nhìn mới, tạm dừng",
     "reversedMeaning": "Trì hoãn, kháng cự, hy sinh vô ích",
     "description": "Người đàn ông treo ngược, đại diện cho sự đầu hàng để đạt được sự sáng suốt.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/2/2b/RWS_Tarot_12_Hanged_Man.jpg"
+    "imageUrl": "assets/images/hanged_man.jpg"
   },
   {
     "name": "Death",
     "uprightMeaning": "Kết thúc, chuyển tiếp, biến đổi, khởi đầu mới",
     "reversedMeaning": "Kháng cự thay đổi, trì trệ, sợ hãi cái chết",
     "description": "Thần chết cưỡi ngựa, đại diện cho sự kết thúc và tái sinh.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/d7/RWS_Tarot_13_Death.jpg"
+    "imageUrl": "assets/images/death.jpg"
   },
   {
     "name": "Temperance",
     "uprightMeaning": "Cân bằng, kiên nhẫn, hòa hợp, tiết kiệm",
     "reversedMeaning": "Mất cân bằng, cực đoan, thiếu kiểm soát",
     "description": "Thiên thần đổ nước giữa hai cốc, đại diện cho sự điều độ và hòa quyện.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/f/f8/RWS_Tarot_14_Temperance.jpg"
+    "imageUrl": "assets/images/temperance.jpg"
   },
   {
     "name": "The Devil",
     "uprightMeaning": "Nô lệ, nghiện ngập, vật chất, bóng tối",
     "reversedMeaning": "Giải phóng, lấy lại quyền lực, buông bỏ",
     "description": "Quỷ với cặp đôi bị xích, đại diện cho sự ràng buộc và dục vọng.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/5/55/RWS_Tarot_15_Devil.jpg"
+    "imageUrl": "assets/images/devil.jpg"
   },
   {
     "name": "The Tower",
     "uprightMeaning": "Thay đổi đột ngột, hỗn loạn, tiết lộ, phá hủy",
     "reversedMeaning": "Tránh thảm họa, sợ thay đổi, trì hoãn khủng hoảng",
     "description": "Tháp bị sét đánh, đại diện cho sự sụp đổ của cấu trúc cũ.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/5/53/RWS_Tarot_16_Tower.jpg"
+    "imageUrl": "assets/images/tower.jpg"
   },
   {
     "name": "The Star",
     "uprightMeaning": "Hy vọng, cảm hứng, bình an, chữa lành",
     "reversedMeaning": "Mất niềm tin, thiếu cảm hứng, ngắt kết nối",
     "description": "Người phụ nữ đổ nước dưới sao, đại diện cho sự đổi mới và hướng dẫn.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/db/RWS_Tarot_17_Star.jpg"
+    "imageUrl": "assets/images/star.jpg"
   },
   {
     "name": "The Moon",
     "uprightMeaning": "Ảo tưởng, trực giác, bất an, lừa dối",
     "reversedMeaning": "Giải phóng sợ hãi, sự thật lộ ra, rõ ràng",
     "description": "Mặt trăng với chó sói và đường mòn, đại diện cho sự mơ hồ và tiềm thức.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/7/7f/RWS_Tarot_18_Moon.jpg"
+    "imageUrl": "assets/images/moon.jpg"
   },
   {
     "name": "The Sun",
     "uprightMeaning": "Thành công, hạnh phúc, tích cực, sức sống",
     "reversedMeaning": "Buồn bã tạm thời, thiếu rõ ràng, tiêu cực",
     "description": "Trẻ em cưỡi ngựa dưới mặt trời, đại diện cho niềm vui và thành công.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/1/17/RWS_Tarot_19_Sun.jpg"
+    "imageUrl": "assets/images/sun.jpg"
   },
   {
     "name": "Judgement",
     "uprightMeaning": "Phán xét, tái sinh, thức tỉnh, tha thứ",
     "reversedMeaning": "Nghi ngờ bản thân, trì hoãn, thiếu tự nhận thức",
     "description": "Thiên thần thổi kèn gọi người chết dậy, đại diện cho sự đánh giá và đổi mới.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/dd/RWS_Tarot_20_Judgement.jpg"
+    "imageUrl": "assets/images/judgement.jpg"
   },
   {
     "name": "The World",
     "uprightMeaning": "Hoàn thành, toàn vẹn, thành công, du lịch",
     "reversedMeaning": "Chưa hoàn thành, trì hoãn, thiếu kết thúc",
     "description": "Người phụ nữ nhảy múa trong vòng nguyệt quế, đại diện cho sự hoàn hảo và thống nhất.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/db/RWS_Tarot_21_World.jpg"
+    "imageUrl": "assets/images/world.jpg"
   },
   {
     "name": "Ace of Wands",
     "uprightMeaning": "Cảm hứng, khởi đầu mới, tiềm năng sáng tạo",
     "reversedMeaning": "Trì hoãn, thiếu hướng đi, thiếu đam mê",
     "description": "Tay cầm gậy nảy mầm, đại diện cho năng lượng sáng tạo và cơ hội mới.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/f/ff/RWS_Tarot_Wands01.jpg"
+    "imageUrl": "assets/images/ace_wands.jpg"
   },
   {
     "name": "Two of Wands",
     "uprightMeaning": "Lập kế hoạch, quyết định, khám phá, tầm nhìn xa",
     "reversedMeaning": "Sợ thay đổi, thiếu lập kế hoạch, do dự",
     "description": "Người đàn ông cầm địa cầu và gậy, nhìn ra biển, đại diện cho sự lựa chọn tương lai.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/0/0f/RWS_Tarot_Wands02.jpg"
+    "imageUrl": "assets/images/two_wands.jpg"
   },
   {
     "name": "Three of Wands",
     "uprightMeaning": "Tiến bộ, mở rộng, tầm nhìn xa, chờ đợi",
     "reversedMeaning": "Trì hoãn, thất vọng, thiếu tầm nhìn",
     "description": "Người đàn ông nhìn tàu biển, đại diện cho sự chuẩn bị và cơ hội đến.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/3b/RWS_Tarot_Wands03.jpg"
+    "imageUrl": "assets/images/three_wands.jpg"
   },
   {
     "name": "Four of Wands",
     "uprightMeaning": "Lễ kỷ niệm, hài hòa, nhà cửa, ổn định",
     "reversedMeaning": "Mất ổn định, xung đột gia đình, chuyển tiếp",
     "description": "Cặp đôi dưới vòng hoa, đại diện cho sự vui mừng và cộng đồng.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/c/c8/RWS_Tarot_Wands04.jpg"
+    "imageUrl": "assets/images/four_wands.jpg"
   },
   {
     "name": "Five of Wands",
     "uprightMeaning": "Cạnh tranh, xung đột, thử thách, đa dạng",
     "reversedMeaning": "Tránh xung đột, hòa giải, tập trung",
     "description": "Nhóm người đấu gậy, đại diện cho sự tranh đấu và bất đồng.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/9d/RWS_Tarot_Wands05.jpg"
+    "imageUrl": "assets/images/five_wands.jpg"
   },
   {
     "name": "Six of Wands",
     "uprightMeaning": "Chiến thắng, công nhận, thành công công khai",
     "reversedMeaning": "Thất bại, thiếu công nhận, kiêu ngạo",
     "description": "Người cưỡi ngựa với vòng nguyệt quế, đại diện cho sự ca tụng và tiến bộ.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/7/7f/RWS_Tarot_Wands06.jpg"
+    "imageUrl": "assets/images/six_wands.jpg"
   },
   {
     "name": "Seven of Wands",
     "uprightMeaning": "Bảo vệ, kiên trì, thách thức, phòng thủ",
     "reversedMeaning": "Bỏ cuộc, quá tải, thiếu tự tin",
     "description": "Người đàn ông chống lại sáu gậy, đại diện cho sự đứng vững trước đối thủ.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/6b/RWS_Tarot_Wands07.jpg"
+    "imageUrl": "assets/images/seven_wands.jpg"
   },
   {
     "name": "Eight of Wands",
     "uprightMeaning": "Chuyển động nhanh, tiến bộ, du lịch, hành động",
     "reversedMeaning": "Trì hoãn, thất vọng, thiếu hướng đi",
     "description": "Tám gậy bay trong không khí, đại diện cho sự thay đổi nhanh chóng.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/4/4b/RWS_Tarot_Wands08.jpg"
+    "imageUrl": "assets/images/eight_wands.jpg"
   },
   {
     "name": "Nine of Wands",
     "uprightMeaning": "Kiên cường, phòng thủ, kiên trì, sức bền",
     "reversedMeaning": "Kiệt sức, phòng thủ quá mức, hoang tưởng",
     "description": "Người đàn ông bị thương cầm gậy, đại diện cho sự cảnh giác cuối cùng.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/b/bf/RWS_Tarot_Wands09.jpg"
+    "imageUrl": "assets/images/nine_wands.jpg"
   },
   {
     "name": "Ten of Wands",
     "uprightMeaning": "Gánh nặng, trách nhiệm, làm việc quá sức",
     "reversedMeaning": "Buông bỏ gánh nặng, giảm stress, tìm sự giúp đỡ",
     "description": "Người đàn ông mang mười gậy, đại diện cho gánh nặng và mệt mỏi.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/6b/RWS_Tarot_Wands10.jpg"
+    "imageUrl": "assets/images/ten_wands.jpg"
   },
   {
     "name": "Page of Wands",
     "uprightMeaning": "Nhiệt tình, khám phá, ý tưởng mới, tin tức",
     "reversedMeaning": "Vội vã, thiếu hướng đi, thất vọng",
     "description": "Chàng trai trẻ cầm gậy, đại diện cho sự tò mò và sáng tạo.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/6a/Page_of_wands.jpg"
+    "imageUrl": "assets/images/page_wands.jpg"
   },
   {
     "name": "Knight of Wands",
     "uprightMeaning": "Hành động, phiêu lưu, đam mê, bốc đồng",
     "reversedMeaning": "Vội vã, thiếu kiên nhẫn, thất vọng",
     "description": "Hiệp sĩ cưỡi ngựa với gậy, đại diện cho năng lượng và thay đổi.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/3b/Knight_of_wands.jpg"
+    "imageUrl": "assets/images/knight_wands.jpg"
   },
   {
     "name": "Queen of Wands",
     "uprightMeaning": "Tự tin, độc lập, ấm áp, quyết đoán",
     "reversedMeaning": "Tức giận, ích kỷ, thiếu tự tin",
     "description": "Nữ hoàng ngồi với gậy và mèo, đại diện cho sức hút và sức mạnh.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/0/0d/Queen_of_wands.jpg"
+    "imageUrl": "assets/images/queen_wands.jpg"
   },
   {
     "name": "King of Wands",
     "uprightMeaning": "Lãnh đạo, tầm nhìn, doanh nhân, danh dự",
     "reversedMeaning": "Bốc đồng, kỳ vọng cao, độc tài",
     "description": "Vua ngồi với gậy và thằn lằn, đại diện cho sự lãnh đạo tự nhiên.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/c/ce/King_of_wands.jpg"
+    "imageUrl": "assets/images/king_wands.jpg"
   },
   {
     "name": "Ace of Cups",
     "uprightMeaning": "Tình yêu mới, từ bi, sáng tạo, trực giác",
     "reversedMeaning": "Chặn cảm xúc, tình yêu không được đáp lại",
     "description": "Tay cầm cốc với chim bồ câu, đại diện cho sự dâng trào cảm xúc.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/36/RWS_Tarot_Cups01.jpg"
+    "imageUrl": "assets/images/ace_cups.jpg"
   },
   {
     "name": "Two of Cups",
     "uprightMeaning": "Hợp nhất, quan hệ đối tác, tình yêu, kết nối",
     "reversedMeaning": "Mất cân bằng, chia tay, thiếu tin tưởng",
     "description": "Cặp đôi trao cốc, đại diện cho sự kết nối cảm xúc.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/f/f8/RWS_Tarot_Cups02.jpg"
+    "imageUrl": "assets/images/two_cups.jpg"
   },
   {
     "name": "Three of Cups",
     "uprightMeaning": "Lễ kỷ niệm, tình bạn, cộng đồng, sáng tạo",
     "reversedMeaning": "Quá mức, cô lập, tin đồn",
     "description": "Ba phụ nữ nâng cốc, đại diện cho sự vui vẻ và hỗ trợ.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/f/ff/RWS_Tarot_Cups03.jpg"
+    "imageUrl": "assets/images/three_cups.jpg"
   },
   {
     "name": "Four of Cups",
     "uprightMeaning": "Suy ngẫm, thờ ơ, bất mãn, cơ hội bị bỏ lỡ",
     "reversedMeaning": "Chấp nhận, tiến về phía trước, nhiệt tình mới",
     "description": "Người đàn ông ngồi dưới cây nhìn cốc, đại diện cho sự nội quan.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/2/2c/RWS_Tarot_Cups04.jpg"
+    "imageUrl": "assets/images/four_cups.jpg"
   },
   {
     "name": "Five of Cups",
     "uprightMeaning": "Mất mát, tiếc nuối, thất vọng, bi quan",
     "reversedMeaning": "Chấp nhận, tiến bộ, tha thứ",
     "description": "Người đàn ông nhìn cốc đổ, đại diện cho nỗi buồn và hy vọng còn lại.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/3b/RWS_Tarot_Cups05.jpg"
+    "imageUrl": "assets/images/five_cups.jpg"
   },
   {
     "name": "Six of Cups",
     "uprightMeaning": "Kỷ niệm, ngây thơ, trẻ em, quá khứ",
     "reversedMeaning": "Kẹt trong quá khứ, trưởng thành, buông bỏ",
     "description": "Trẻ em trao hoa trong cốc, đại diện cho sự hoài niệm.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/1/17/RWS_Tarot_Cups06.jpg"
+    "imageUrl": "assets/images/six_cups.jpg"
   },
   {
     "name": "Seven of Cups",
     "uprightMeaning": "Lựa chọn, ảo tưởng, mơ mộng, quyết định",
     "reversedMeaning": "Rõ ràng, lựa chọn thực tế, tránh ảo tưởng",
     "description": "Người nhìn mây với cốc chứa biểu tượng, đại diện cho sự mơ mộng.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/c/c8/RWS_Tarot_Cups07.jpg"
+    "imageUrl": "assets/images/seven_cups.jpg"
   },
   {
     "name": "Eight of Cups",
     "uprightMeaning": "Bỏ đi, tìm kiếm, thất vọng, hành trình tinh thần",
     "reversedMeaning": "Trì trệ, trở lại, sợ thay đổi",
     "description": "Người rời bỏ tám cốc, đại diện cho việc tìm kiếm ý nghĩa sâu sắc hơn.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/7/76/RWS_Tarot_Cups08.jpg"
+    "imageUrl": "assets/images/eight_cups.jpg"
   },
   {
     "name": "Nine of Cups",
     "uprightMeaning": "Hài lòng, thỏa mãn, mong muốn thành hiện thực",
     "reversedMeaning": "Tham lam, bất mãn, kiêu ngạo",
     "description": "Người đàn ông ngồi trước chín cốc, đại diện cho sự hạnh phúc vật chất.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/2/24/RWS_Tarot_Cups09.jpg"
+    "imageUrl": "assets/images/nine_cups.jpg"
   },
   {
     "name": "Ten of Cups",
     "uprightMeaning": "Hạnh phúc, gia đình, hài hòa, hoàn thành",
     "reversedMeaning": "Gia đình tan vỡ, mất hài hòa, xung đột",
     "description": "Gia đình dưới cầu vồng với cốc, đại diện cho sự viên mãn cảm xúc.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/93/RWS_Tarot_Cups10.jpg"
+    "imageUrl": "assets/images/ten_cups.jpg"
   },
   {
     "name": "Page of Cups",
     "uprightMeaning": "Sáng tạo, trực giác, tin tức cảm xúc, nhạy cảm",
     "reversedMeaning": "Chặn cảm xúc, chưa trưởng thành, thiếu sáng tạo",
     "description": "Chàng trai trẻ cầm cốc với cá, đại diện cho sự nhạy cảm và giấc mơ.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/62/Page_of_cups.jpg"
+    "imageUrl": "assets/images/page_cups.jpg"
   },
   {
     "name": "Knight of Cups",
     "uprightMeaning": "Lãng mạn, quyến rũ, tưởng tượng, lời mời",
     "reversedMeaning": "Tâm trạng, ghen tị, không thực tế",
     "description": "Hiệp sĩ cưỡi ngựa với cốc, đại diện cho sự theo đuổi cảm xúc.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/3e/Knight_of_cups.jpg"
+    "imageUrl": "assets/images/knight_cups.jpg"
   },
   {
     "name": "Queen of Cups",
     "uprightMeaning": "Từ bi, trực giác, nuôi dưỡng, cảm xúc",
     "reversedMeaning": "Phụ thuộc cảm xúc, bất an, thiếu biên giới",
     "description": "Nữ hoàng cầm cốc phức tạp, đại diện cho sự đồng cảm và trực giác.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/0/07/Queen_of_cups.jpg"
+    "imageUrl": "assets/images/queen_cups.jpg"
   },
   {
     "name": "King of Cups",
     "uprightMeaning": "Cân bằng cảm xúc, từ bi, lãnh đạo, ngoại giao",
     "reversedMeaning": "Thao túng cảm xúc, tâm trạng, lạnh lùng",
     "description": "Vua ngồi trên ngai với cốc, đại diện cho sự kiểm soát cảm xúc.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/c/c2/King_of_cups.jpg"
+    "imageUrl": "assets/images/king_cups.jpg"
   },
   {
     "name": "Ace of Swords",
     "uprightMeaning": "Sự thật, rõ ràng, đột phá, sức mạnh trí tuệ",
     "reversedMeaning": "Hỗn loạn, thiếu rõ ràng, lạm dụng quyền lực",
     "description": "Tay cầm kiếm với vương miện, đại diện cho sức mạnh của trí óc.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/34/RWS_Tarot_Swords01.jpg"
+    "imageUrl": "assets/images/ace_swords.jpg"
   },
   {
     "name": "Two of Swords",
     "uprightMeaning": "Quyết định khó khăn, bế tắc, tránh né, cân bằng",
     "reversedMeaning": "Do dự, tiết lộ sự thật, hành động",
     "description": "Phụ nữ bịt mắt cầm hai kiếm, đại diện cho sự lựa chọn mù quáng.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/9e/RWS_Tarot_Swords02.jpg"
+    "imageUrl": "assets/images/two_swords.jpg"
   },
   {
     "name": "Three of Swords",
     "uprightMeaning": "Đau lòng, phản bội, đau buồn, mất mát",
     "reversedMeaning": "Phục hồi, tha thứ, tiến bộ",
     "description": "Trái tim bị đâm bởi ba kiếm dưới mưa, đại diện cho nỗi đau cảm xúc.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/9b/RWS_Tarot_Swords03.jpg"
+    "imageUrl": "assets/images/three_swords.jpg"
   },
   {
     "name": "Four of Swords",
     "uprightMeaning": "Nghỉ ngơi, phục hồi, suy ngẫm, thiền định",
     "reversedMeaning": "Kiệt sức, thiếu nghỉ ngơi, hoạt động trở lại",
     "description": "Hiệp sĩ nằm trên mộ với kiếm, đại diện cho sự nghỉ ngơi sau xung đột.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/e/ee/RWS_Tarot_Swords04.jpg"
+    "imageUrl": "assets/images/four_swords.jpg"
   },
   {
     "name": "Five of Swords",
     "uprightMeaning": "Xung đột, thất bại, chiến thắng với giá cao, thao túng",
     "reversedMeaning": "Tha thứ, tiến bộ, buông bỏ oán hận",
     "description": "Người đàn ông cầm ba kiếm, hai người khác rời đi, đại diện cho sự đánh bại.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/2/23/RWS_Tarot_Swords05.jpg"
+    "imageUrl": "assets/images/five_swords.jpg"
   },
   {
     "name": "Six of Swords",
     "uprightMeaning": "Chuyển tiếp, di chuyển, chữa lành, hành trình",
     "reversedMeaning": "Trì hoãn, kháng cự thay đổi, kẹt lại",
     "description": "Gia đình trên thuyền qua nước, đại diện cho việc rời bỏ khó khăn.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/d4/RWS_Tarot_Swords06.jpg"
+    "imageUrl": "assets/images/six_swords.jpg"
   },
   {
     "name": "Seven of Swords",
     "uprightMeaning": "Lừa dối, chiến lược, trộm cắp, trốn tránh",
     "reversedMeaning": "Thú nhận, trung thực, hậu quả",
     "description": "Người đàn ông mang năm kiếm, đại diện cho sự gian lận và chạy trốn.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/3e/RWS_Tarot_Swords07.jpg"
+    "imageUrl": "assets/images/seven_swords.jpg"
   },
   {
     "name": "Eight of Swords",
     "uprightMeaning": "Giam cầm, hạn chế, nạn nhân, tự áp đặt",
     "reversedMeaning": "Giải phóng, tự trao quyền, vượt qua sợ hãi",
     "description": "Phụ nữ bị bịt mắt và ràng buộc bởi kiếm, đại diện cho sự bất lực.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/b/bf/RWS_Tarot_Swords08.jpg"
+    "imageUrl": "assets/images/eight_swords.jpg"
   },
   {
     "name": "Nine of Swords",
     "uprightMeaning": "Lo lắng, sợ hãi, ác mộng, tuyệt vọng",
     "reversedMeaning": "Hy vọng, vượt qua sợ hãi, phục hồi",
     "description": "Phụ nữ ngồi trên giường với chín kiếm, đại diện cho nỗi sợ nội tâm.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/2/24/RWS_Tarot_Swords09.jpg"
+    "imageUrl": "assets/images/nine_swords.jpg"
   },
   {
     "name": "Ten of Swords",
     "uprightMeaning": "Kết thúc đau đớn, thất bại, khủng hoảng, phục hồi",
     "reversedMeaning": "Phục hồi, kháng cự kết thúc, cải thiện",
     "description": "Người đàn ông bị đâm mười kiếm, đại diện cho sự sụp đổ hoàn toàn.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/d4/RWS_Tarot_Swords10.jpg"
+    "imageUrl": "assets/images/ten_swords.jpg"
   },
   {
     "name": "Page of Swords",
     "uprightMeaning": "Tò mò, cảnh giác, ý tưởng mới, giao tiếp",
     "reversedMeaning": "Vội vã, thiếu kiên nhẫn, tin đồn",
     "description": "Chàng trai trẻ cầm kiếm, đại diện cho sự sắc bén trí tuệ.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/33/Page_of_swords.jpg"
+    "imageUrl": "assets/images/page_swords.jpg"
   },
   {
     "name": "Knight of Swords",
     "uprightMeaning": "Hành động, quyết đoán, tham vọng, thay đổi nhanh",
     "reversedMeaning": "Bốc đồng, thiếu suy nghĩ, xung đột",
     "description": "Hiệp sĩ lao tới với kiếm, đại diện cho sự theo đuổi mục tiêu.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/b/b0/Knight_of_swords.jpg"
+    "imageUrl": "assets/images/knight_swords.jpg"
   },
   {
     "name": "Queen of Swords",
     "uprightMeaning": "Độc lập, rõ ràng, trung thực, thông minh",
     "reversedMeaning": "Lạnh lùng, cay đắng, thiếu đồng cảm",
     "description": "Nữ hoàng cầm kiếm, đại diện cho sự sắc bén và chân thật.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/e/ea/Queen_of_swords.jpg"
+    "imageUrl": "assets/images/queen_swords.jpg"
   },
   {
     "name": "King of Swords",
     "uprightMeaning": "Sự thật, quyền lực, trí tuệ, lãnh đạo",
     "reversedMeaning": "Thao túng, độc tài, lạm dụng quyền lực",
     "description": "Vua cầm kiếm, đại diện cho sự công bằng và logic.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/33/King_of_swords.jpg"
+    "imageUrl": "assets/images/king_swords.jpg"
   },
   {
     "name": "Ace of Pentacles",
     "uprightMeaning": "Cơ hội mới, thịnh vượng, biểu hiện, ổn định",
     "reversedMeaning": "Cơ hội bị mất, thiếu lập kế hoạch, tham lam",
     "description": "Tay cầm đồng xu với vườn, đại diện cho sự giàu có vật chất.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/1/11/RWS_Tarot_Pentacles01.jpg"
+    "imageUrl": "assets/images/ace_pentacles.jpg"
   },
   {
     "name": "Two of Pentacles",
     "uprightMeaning": "Cân bằng, thích nghi, đa nhiệm, thay đổi",
     "reversedMeaning": "Quá tải, mất cân bằng, thiếu tổ chức",
     "description": "Người tung hứng hai đồng xu, đại diện cho sự quản lý thay đổi.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/9d/RWS_Tarot_Pentacles02.jpg"
+    "imageUrl": "assets/images/two_pentacles.jpg"
   },
   {
     "name": "Three of Pentacles",
     "uprightMeaning": "Hợp tác, kỹ năng, học hỏi, làm việc nhóm",
     "reversedMeaning": "Thiếu hợp tác, chất lượng kém, xung đột",
     "description": "Thợ thủ công làm việc với người khác, đại diện cho sự khéo léo.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/4/42/RWS_Tarot_Pentacles03.jpg"
+    "imageUrl": "assets/images/three_pentacles.jpg"
   },
   {
     "name": "Four of Pentacles",
     "uprightMeaning": "Ổn định, kiểm soát, bảo thủ, sở hữu",
     "reversedMeaning": "Tham lam, mất mát, phóng khoáng",
     "description": "Người đàn ông ôm đồng xu, đại diện cho sự giữ gìn tài sản.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/4/4f/RWS_Tarot_Pentacles04.jpg"
+    "imageUrl": "assets/images/four_pentacles.jpg"
   },
   {
     "name": "Five of Pentacles",
     "uprightMeaning": "Khó khăn, nghèo đói, cô lập, lo lắng",
     "reversedMeaning": "Phục hồi, hy vọng, cải thiện tài chính",
     "description": "Hai người nghèo dưới cửa sổ nhà thờ, đại diện cho sự thiếu thốn.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/96/RWS_Tarot_Pentacles05.jpg"
+    "imageUrl": "assets/images/five_pentacles.jpg"
   },
   {
     "name": "Six of Pentacles",
     "uprightMeaning": "Hào phóng, chia sẻ, từ thiện, cân bằng",
     "reversedMeaning": "Bất bình đẳng, tham lam, lạm dụng",
     "description": "Người giàu cho tiền người nghèo, đại diện cho sự công bằng xã hội.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/f/f7/RWS_Tarot_Pentacles06.jpg"
+    "imageUrl": "assets/images/six_pentacles.jpg"
   },
   {
     "name": "Seven of Pentacles",
     "uprightMeaning": "Đầu tư, kiên nhẫn, đánh giá, phần thưởng dài hạn",
     "reversedMeaning": "Thiếu tiến bộ, lãng phí, thiếu kiên nhẫn",
     "description": "Người đàn ông nhìn cây với đồng xu, đại diện cho sự chờ đợi kết quả.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/a/af/RWS_Tarot_Pentacles07.jpg"
+    "imageUrl": "assets/images/seven_pentacles.jpg"
   },
   {
     "name": "Eight of Pentacles",
     "uprightMeaning": "Chăm chỉ, kỹ năng, thủ công, học hỏi",
     "reversedMeaning": "Chất lượng kém, thiếu tập trung, kiệt sức",
     "description": "Thợ thủ công khắc đồng xu, đại diện cho sự cống hiến.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/4/49/RWS_Tarot_Pentacles08.jpg"
+    "imageUrl": "assets/images/eight_pentacles.jpg"
   },
   {
     "name": "Nine of Pentacles",
     "uprightMeaning": "Sang trọng, tự lực, thành công, phong phú",
     "reversedMeaning": "Cô lập, phụ thuộc, lừa dối",
     "description": "Phụ nữ trong vườn với chim ưng, đại diện cho sự độc lập tài chính.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/0/0a/RWS_Tarot_Pentacles09.jpg"
+    "imageUrl": "assets/images/nine_pentacles.jpg"
   },
   {
     "name": "Ten of Pentacles",
     "uprightMeaning": "Di sản, gia đình, ổn định lâu dài, thịnh vượng",
     "reversedMeaning": "Mất mát tài chính, xung đột gia đình, bất ổn",
     "description": "Gia đình giàu có với đồng xu, đại diện cho sự giàu có thế hệ.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/5/57/RWS_Tarot_Pentacles10.jpg"
+    "imageUrl": "assets/images/ten_pentacles.jpg"
   },
   {
     "name": "Page of Pentacles",
     "uprightMeaning": "Tham vọng, học hỏi, cơ hội mới, thực tế",
     "reversedMeaning": "Thiếu tiến bộ, lười biếng, thiếu tập trung",
     "description": "Chàng trai trẻ cầm đồng xu, đại diện cho sự học hỏi và mục tiêu.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/a/af/Page_of_pentacles.jpg"
+    "imageUrl": "assets/images/page_pentacles.jpg"
   },
   {
     "name": "Knight of Pentacles",
     "uprightMeaning": "Chăm chỉ, đáng tin cậy, kiên nhẫn, trách nhiệm",
     "reversedMeaning": "Trì trệ, nhàm chán, thiếu sáng tạo",
     "description": "Hiệp sĩ ngồi trên ngựa với đồng xu, đại diện cho sự kiên định.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/e/ec/Knight_of_pentacles.jpg"
+    "imageUrl": "assets/images/knight_pentacles.jpg"
   },
   {
     "name": "Queen of Pentacles",
     "uprightMeaning": "Nuôi dưỡng, thực tế, hào phóng, an ninh",
     "reversedMeaning": "Phụ thuộc tài chính, thiếu tự chăm sóc, ghen tị",
     "description": "Nữ hoàng ngồi với đồng xu và thỏ, đại diện cho sự phong phú thực tế.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/8/88/Queen_of_pentacles.jpg"
+    "imageUrl": "assets/images/queen_pentacles.jpg"
   },
   {
     "name": "King of Pentacles",
     "uprightMeaning": "Thành công, an ninh, lãnh đạo, phong phú",
     "reversedMeaning": "Tham lam, cố chấp, lười biếng",
     "description": "Vua ngồi với đồng xu và bò, đại diện cho sự giàu có và ổn định.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/1/1c/King_of_pentacles.jpg"
+    "imageUrl": "assets/images/king_pentacles.jpg"
   }
 ]

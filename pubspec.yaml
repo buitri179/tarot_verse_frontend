@@ -19,6 +19,7 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_hooks: ^0.20.5
   cupertino_icons: ^1.0.8
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
@@ -31,10 +32,12 @@ flutter:
 
   assets:
     - assets/tarot_cards.json
+    - assets/images/
 
   fonts:
     - family: CinzelDecorative
       fonts:
         - asset: assets/fonts/CinzelDecorative-Regular.ttf
         - asset: assets/fonts/CinzelDecorative-Bold.ttf
+        - asset: assets/fonts/CinzelDecorative-Black.ttf
           weight: 700

@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import '../models/tarot_response.dart';
 import '../widgets/star_field.dart';
 import '../models/tarot_card.dart';
 import 'results_screen.dart';
@@ -33,7 +35,8 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
   bool showCards = false;
   bool showResultButton = false;
 
-  List<TarotCardModel> fetchedCards = [];
+  // Thay thế fetchedCards bằng tarotResponse
+  TarotResponse? _tarotResponse;
   final TarotService _tarotService = TarotService();
   String? errorMessage;
 
@@ -41,17 +44,21 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    fastSpin = AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    slowSpin = AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    fastSpin =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    slowSpin =
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
 
     totalAngle = Tween<double>(begin: 0, end: 5 * 2 * pi).animate(
       CurvedAnimation(parent: fastSpin, curve: Curves.easeOut),
     );
 
-    _startSpinningAndFetchCards();
+    // Đổi tên hàm để phản ánh đúng chức năng mới
+    _fetchReadingAndShowCards();
   }
 
-  Future<void> _startSpinningAndFetchCards() async {
+  // Hàm mới: Gọi API để lấy cả bài và diễn giải
+  Future<void> _fetchReadingAndShowCards() async {
     await fastSpin.forward();
 
     totalAngle = Tween<double>(
@@ -62,19 +69,19 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
     final slowSpinFuture = slowSpin.forward();
 
     try {
-      final fetchedMaps = await _tarotService.getShuffledCards();
-      final fetchedModels = fetchedMaps.map((map) {
-        return TarotCardModel(
-          id: -1,
-          name: map['name']!,
-          image: map['img']!,
-          meanings: {'general': map['meaning']!},
-        );
-      }).toList();
+      // Gọi API để lấy kết quả hoàn chỉnh
+      final response = await _tarotService.askTarot(
+        name: widget.name,
+        birthDate: DateFormat('yyyy-MM-dd').format(widget.birthDate),
+        gender: widget.gender,
+        topic: widget.topics.join(', '),
+      );
 
-      setState(() {
-        fetchedCards = fetchedModels;
-      });
+      if (mounted) {
+        setState(() {
+          _tarotResponse = response;
+        });
+      }
 
       await slowSpinFuture;
 
@@ -97,7 +104,7 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
       if (mounted) {
         setState(() {
           isSpinning = false;
-          errorMessage = 'Không thể lấy lá bài: $e';
+          errorMessage = 'Không thể lấy kết quả: $e';
         });
       }
     }
@@ -117,8 +124,8 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
         fit: StackFit.expand,
         children: [
           Positioned.fill(
-            child: Image.network(
-              'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1471&auto=format&fit=crop',
+            child: Image.asset(
+              'assets/images/back_ground.jpg',
               fit: BoxFit.cover,
             ),
           ),
@@ -126,7 +133,6 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
           Positioned.fill(
             child: Container(color: Colors.black.withOpacity(0.45)),
           ),
-
           Positioned(
             top: 24,
             left: 12,
@@ -138,9 +144,10 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
-
           if (isSpinning) _buildSpinningDeck(),
-          if (showCards && !isSpinning) _buildCardsDisplay(),
+          // Sửa đổi để sử dụng _tarotResponse
+          if (showCards && !isSpinning && _tarotResponse != null)
+            _buildCardsDisplay(),
           if (errorMessage != null) _buildErrorDisplay(),
         ],
       ),
@@ -161,12 +168,17 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
               animation: totalAngle,
               builder: (context, _) {
                 final angle = totalAngle.value;
-                final transform = Matrix4.identity()
-                  ..setEntry(3, 2, 0.0015)
-                  ..rotateY(angle);
+                const deckDepth = 78 * 0.8; // tổng độ dày bộ bài
+
                 return Transform(
-                  transform: transform,
                   alignment: Alignment.center,
+                  transform: Matrix4.identity()
+                    ..setEntry(3, 2, 0.0015)
+                    ..multiply(
+                        Matrix4.translationValues(0.0, 0.0, -deckDepth / 2))
+                    ..rotateY(angle)
+                    ..multiply(
+                        Matrix4.translationValues(0.0, 0.0, deckDepth / 2)),
                   child: const _DeckBox(),
                 );
               },
@@ -176,184 +188,105 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
       ],
     );
   }
+}
 
-  Widget _buildCardsDisplay() {
-    return Column(
-      children: [
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Text(
-              'Lá bài của bạn đã được chọn',
-              style: GoogleFonts.cinzelDecorative(
-                fontSize: 24,
-                color: const Color(0xFFFFD700),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 650),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 280,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: fetchedCards.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final card = entry.value;
-                        return _AnimatedCard(
-                          card: card,
-                          delay: Duration(milliseconds: index * 300),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  AnimatedOpacity(
-                    opacity: showResultButton ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 800),
-                    child: AnimatedSlide(
-                      offset: showResultButton ? Offset.zero : const Offset(0, 0.5),
-                      duration: const Duration(milliseconds: 800),
-                      curve: Curves.easeOutBack,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFFD700),
-                          foregroundColor: Colors.black,
-                          shape: const StadiumBorder(),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 16,
-                          ),
-                          elevation: 12,
-                          shadowColor: const Color(0x80FFD700),
-                        ),
-                        onPressed: showResultButton ? () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ResultsScreen(
-                                selected: fetchedCards,
-                                topics: widget.topics,
-                                name: widget.name,
-                                birthDate: widget.birthDate,
-                                gender: widget.gender,
-                              ),
-                            ),
-                          );
-                        } : null,
-                        child: const Text(
-                          'Xem Kết Quả',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
+class _DeckSide extends StatelessWidget {
+  final double width;
+  final double height;
+
+  const _DeckSide({required this.width, required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: const BoxDecoration(
+        color: Color(0xFF4a2e19), // Màu nâu sẫm cho cạnh bộ bài
+      ),
     );
   }
+}
 
-  Widget _buildErrorDisplay() {
+class _DeckBox extends StatelessWidget {
+  const _DeckBox();
+
+  @override
+  Widget build(BuildContext context) {
+    const cardWidth = 200.0;
+    const cardHeight = 350.0;
+    const deckDepth = 78 * 0.8;
+    const overlap = 1.0; // Small overlap to prevent visual gaps
+
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Card(
-          color: const Color(0xB0000000),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-            side: BorderSide(color: Colors.redAccent.withOpacity(0.3)),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Mặt sau
+          Transform(
+            transform: Matrix4.translationValues(0, 0, -deckDepth / 2),
+            child: const _CardFace(),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.redAccent,
-                  size: 48,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Đã xảy ra lỗi',
-                  style: GoogleFonts.cinzelDecorative(
-                    fontSize: 22,
-                    color: Colors.redAccent,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  errorMessage!,
-                  style: const TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFD700),
-                    foregroundColor: Colors.black,
-                    shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Quay lại'),
-                ),
-              ],
-            ),
+          // Mặt trước
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.translationValues(0.0, 0.0, deckDepth / 2)
+              ..rotateY(pi),
+            child: const _CardFace(),
           ),
+          // Mặt trái
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.translationValues(-cardWidth / 2, 0.0, 0.0)
+              ..rotateY(-pi / 2),
+            child: _DeckSide(width: deckDepth + overlap, height: cardHeight + overlap),
+          ),
+          // Mặt phải
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.translationValues(cardWidth / 2, 0.0, 0.0)
+              ..rotateY(pi / 2),
+            child: _DeckSide(width: deckDepth + overlap, height: cardHeight + overlap),
+          ),
+          // Mặt trên
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.translationValues(0.0, -cardHeight / 2, 0.0)
+              ..rotateX(pi / 2),
+            child: _DeckSide(width: cardWidth + overlap, height: deckDepth + overlap),
+          ),
+          // Mặt dưới
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.translationValues(0.0, cardHeight / 2, 0.0)
+              ..rotateX(-pi / 2),
+            child: _DeckSide(width: cardWidth + overlap, height: deckDepth + overlap),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CardFace extends StatelessWidget {
+  const _CardFace();
+
+  @override
+  Widget build(BuildContext context) {
+    const overlap = 1.0; // Match the overlap in _DeckBox
+    return Container(
+      width: 200 + overlap,
+      height: 350 + overlap,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/back_card.png'),
+          fit: BoxFit.cover,
         ),
       ),
     );
   }
 }
 
-// Widget cho bộ bài đang xoay
-class _DeckBox extends StatelessWidget {
-  const _DeckBox();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: List.generate(20, (i) {
-        return Positioned(
-          top: 25,
-          left: 25,
-          child: Container(
-            width: 200,
-            height: 350,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x88FFD700),
-                  blurRadius: 20,
-                )
-              ],
-              image: const DecorationImage(
-                image: NetworkImage('https://i.imgur.com/JQ9p7xD.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-}
-
-// Widget cho lá bài với animation xuất hiện
 class _AnimatedCard extends StatefulWidget {
   final TarotCardModel card;
   final Duration delay;
@@ -437,8 +370,8 @@ class _AnimatedCardState extends State<_AnimatedCard>
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child: Image.network(
-                        widget.card.image,
+                      child: Image.asset(
+                        widget.card.imageUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
@@ -490,7 +423,6 @@ class _AnimatedCardState extends State<_AnimatedCard>
   }
 }
 
-// Widget hiển thị loading với text thay đổi
 class _LoadingIndicator extends StatefulWidget {
   const _LoadingIndicator();
 
@@ -503,7 +435,7 @@ class _LoadingIndicatorState extends State<_LoadingIndicator>
   late final AnimationController _textController;
   final List<String> _loadingTexts = [
     'Kết nối với vũ trụ...',
-    'Lắng nghe tiếng thầm của các vì sao...',
+    'Lắng nghe tiếng thầm thì của các vì sao...',
     'Giải mã thông điệp từ thần linh...',
     'Chuẩn bị lá bài cho bạn...',
   ];
