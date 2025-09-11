@@ -31,29 +31,22 @@ class _ResultsScreenState extends State<ResultsScreen> {
   int _currentIndex = 0;
   TarotResponse? _apiResponse;
   final TarotService _tarotService = TarotService();
-  final Map<String, String> _cardOrientations = {};
 
   @override
   void initState() {
     super.initState();
-    _fetchReading();
+    if (widget.selectedCards.isNotEmpty) {
+      _fetchReading();
+    }
   }
 
   Future<void> _fetchReading() async {
     try {
-      // Giả lập trạng thái ngẫu nhiên cho các lá bài (xuôi hoặc ngược)
-      for (var card in widget.selectedCards) {
-        _cardOrientations[card.name] =
-            (DateTime.now().millisecond % 2 == 0) ? 'upright' : 'reversed';
-      }
-
-      final cardNames = widget.selectedCards.map((c) => c.name).toList();
       final response = await _tarotService.askTarot(
         name: widget.name,
         birthDate: DateFormat('yyyy-MM-dd').format(widget.birthDate),
         gender: widget.gender,
         topic: widget.topics.join(', '),
-        cards: cardNames,
       );
 
       if (mounted) {
@@ -66,7 +59,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         setState(() {
           _apiResponse = TarotResponse(
             conclusion: 'Không thể lấy kết quả diễn giải. Vui lòng thử lại.',
-            cards: [],
+            drawnCards: [],
             cardsDetail: {},
           );
         });
@@ -76,8 +69,24 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.selectedCards.isEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Không có lá bài nào được chọn.'),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Quay lại'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final card = widget.selectedCards[_currentIndex];
-    final orientation = _cardOrientations[card.name]!;
     final isFirst = _currentIndex == 0;
     final isLast = _currentIndex == widget.selectedCards.length - 1;
 
@@ -204,14 +213,6 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                                 ),
                                               ),
                                               const SizedBox(height: 8),
-                                              Text(
-                                                orientation == 'upright'
-                                                    ? card.uprightMeaning
-                                                    : card.reversedMeaning,
-                                                style: const TextStyle(
-                                                    fontSize: 16, height: 1.5),
-                                              ),
-                                              const SizedBox(height: 4),
                                               if (isApiLoading)
                                                 Padding(
                                                   padding: const EdgeInsets.symmetric(vertical: 16.0),

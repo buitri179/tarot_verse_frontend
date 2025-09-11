@@ -90,7 +90,7 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(8),
-                                            child: Image.network(
+                                            child: Image.asset(
                                               c.imageUrl,
                                               width: 150,
                                               height: 240,

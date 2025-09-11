@@ -188,6 +188,99 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
       ],
     );
   }
+
+  Widget _buildErrorDisplay() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.red, size: 60),
+          const SizedBox(height: 20),
+          Text(
+            errorMessage ?? 'Đã xảy ra lỗi không xác định.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                errorMessage = null;
+                isSpinning = true;
+              });
+              _fetchReadingAndShowCards();
+            },
+            child: const Text('Thử lại'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCardsDisplay() {
+    if (_tarotResponse == null) return const SizedBox.shrink();
+
+    final drawnCards = _tarotResponse!.drawnCards;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Các lá bài đã được rút cho bạn',
+          style: GoogleFonts.cinzelDecorative(
+            fontSize: 22,
+            color: const Color(0xFFFFD700),
+          ),
+        ),
+        const SizedBox(height: 30),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(drawnCards.length, (index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: _AnimatedCard(
+                card: drawnCards[index],
+                delay: Duration(milliseconds: 300 * index),
+              ),
+            );
+          }),
+        ),
+        const SizedBox(height: 40),
+        if (showResultButton)
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFFD700),
+              foregroundColor: Colors.black,
+              shape: const StadiumBorder(),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+              elevation: 10,
+              shadowColor: const Color(0x80FFD700),
+            ),
+            onPressed: _goToResults,
+            child: const Text(
+              'Xem Diễn Giải Chi Tiết',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _goToResults() {
+    if (_tarotResponse == null) return;
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ResultsScreen(
+          selectedCards: _tarotResponse!.drawnCards,
+          topics: widget.topics,
+          name: widget.name,
+          birthDate: widget.birthDate,
+          gender: widget.gender,
+        ),
+      ),
+    );
+  }
 }
 
 class _DeckSide extends StatelessWidget {

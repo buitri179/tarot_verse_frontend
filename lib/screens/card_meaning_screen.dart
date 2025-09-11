@@ -1,3 +1,5 @@
+
+import 'package:tarot_verse_frontend/models/tarot_card.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +13,7 @@ class CardMeaningScreen extends StatefulWidget {
 }
 
 class _CardMeaningScreenState extends State<CardMeaningScreen> {
-  late Future<List<TarotCard>> tarotCardsFuture;
+  late Future<List<TarotCardModel>> tarotCardsFuture;
   int? selectedIndex;
 
   @override
@@ -20,11 +22,11 @@ class _CardMeaningScreenState extends State<CardMeaningScreen> {
     tarotCardsFuture = loadTarotCards();
   }
 
-  Future<List<TarotCard>> loadTarotCards() async {
+  Future<List<TarotCardModel>> loadTarotCards() async {
     final String response =
     await rootBundle.loadString('assets/tarot_cards.json');
     final List<dynamic> data = json.decode(response);
-    return data.map((json) => TarotCard.fromJson(json)).toList();
+    return data.map((json) => TarotCardModel.fromJson(json)).toList();
   }
 
   @override
@@ -50,7 +52,7 @@ class _CardMeaningScreenState extends State<CardMeaningScreen> {
         children: [
           const StarField(), // giữ background như LandingScreen
           SafeArea(
-            child: FutureBuilder<List<TarotCard>>(
+            child: FutureBuilder<List<TarotCardModel>>(
               future: tarotCardsFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -98,7 +100,7 @@ class _CardMeaningScreenState extends State<CardMeaningScreen> {
     );
   }
 
-  Widget _buildGrid(List<TarotCard> cards, int startIndex) {
+  Widget _buildGrid(List<TarotCardModel> cards, int startIndex) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -130,7 +132,7 @@ class _CardMeaningScreenState extends State<CardMeaningScreen> {
 
 // FlipCardWidget giữ nguyên như trước, có nút "Xem chi tiết" và "Lật lại"
 class FlipCardWidget extends StatefulWidget {
-  final TarotCard card;
+  final TarotCardModel card;
   final bool isSelected;
   final VoidCallback? onSelected;
 
@@ -307,29 +309,4 @@ class _FlipCardWidgetState extends State<FlipCardWidget>
   }
 }
 
-// Model TarotCard
-class TarotCard {
-  final String name;
-  final String uprightMeaning;
-  final String reversedMeaning;
-  final String description;
-  final String imageUrl;
 
-  TarotCard({
-    required this.name,
-    required this.uprightMeaning,
-    required this.reversedMeaning,
-    required this.description,
-    required this.imageUrl,
-  });
-
-  factory TarotCard.fromJson(Map<String, dynamic> json) {
-    return TarotCard(
-      name: json['name'] as String,
-      uprightMeaning: json['uprightMeaning'] as String,
-      reversedMeaning: json['reversedMeaning'] as String,
-      description: json['description'] as String,
-      imageUrl: json['imageUrl'] as String,
-    );
-  }
-}

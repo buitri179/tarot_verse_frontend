@@ -1,36 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:tarot_verse_frontend/data/tarot_data.dart';
-import 'package:tarot_verse_frontend/models/tarot_card.dart';
-import 'package:tarot_verse_frontend/models/tarot_response.dart';
-
-class TarotService {
-  // Endpoint của backend
-  static const String _endpoint = 'http://localhost:8080/api/tarot/reading';
-
-  /// Lấy 3 lá bài ngẫu nhiên từ bộ bài 78 lá đã được tải.
-  List<TarotCardModel> getShuffledCards() {
-    final allCards = TarotDataService.instance.allCards;
-    if (allCards.length < 3) {
-      throw Exception('Not enough cards to draw from.');
-    }
-    final shuffledList = List<TarotCardModel>.from(allCards);
-    shuffledList.shuffle();
-    return shuffledList.sublist(0, 3);
-  }
-
-  /// Gửi yêu cầu giải bài Tarot đến backend
-  Future<TarotResponse> askTarot({
-    required String name,
-    required String birthDate,
-    required String gender,
-    required String topic,
-    required List<String> cards, // Cập nhật để nhận tên lá bài
-    String? question,
-  }) async {
-    try {
-      import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:tarot_verse_frontend/models/tarot_response.dart';
 
 class TarotService {
@@ -70,21 +39,6 @@ class TarotService {
         final errorBody = utf8.decode(response.bodyBytes);
         throw Exception(
             'Failed to load tarot reading. Status code: ${response.statusCode}, Body: $errorBody');
-      }
-    } catch (e) {
-      print('❌ Error in askTarot: $e');
-      throw Exception('An error occurred while asking for a tarot reading: $e');
-    }
-  }
-}
-
-
-      if (response.statusCode == 200) {
-        final responseData = json.decode(utf8.decode(response.bodyBytes));
-        return TarotResponse.fromJson(responseData);
-      } else {
-        final errorBody = utf8.decode(response.bodyBytes);
-        throw Exception('Failed to load tarot reading. Status code: ${response.statusCode}, Body: $errorBody');
       }
     } catch (e) {
       print('❌ Error in askTarot: $e');
