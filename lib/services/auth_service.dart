@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,18 +9,33 @@ import '../config.dart';
 class AuthService {
   final String _baseUrl = '$baseUrl/api/auth';
 
+  // Helper để xử lý lỗi từ response
+  Exception _handleError(http.Response response) {
+    try {
+      // Thử decode JSON từ body của response
+      final errorBody = json.decode(response.body);
+      // Lấy message lỗi, nếu không có thì trả về một message mặc định
+      final errorMessage = errorBody['message'] ?? 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+      return Exception(errorMessage);
+    } catch (e) {
+      // Nếu không thể parse JSON, trả về lỗi chung
+      return Exception('Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại đường truyền.');
+    }
+  }
+
   Future<AuthResponse> register(RegistrationRequest request) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/register'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(request.toJson()),
     );
-    if (response.statusCode == 200) {
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final authResponse = AuthResponse.fromJson(json.decode(response.body));
       await _saveToken(authResponse.token);
       return authResponse;
     } else {
-      throw Exception('Đăng ký thất bại. Vui lòng thử lại.');
+      throw _handleError(response);
     }
   }
 
@@ -29,12 +45,13 @@ class AuthService {
       headers: {'Content-Type': 'application/json'},
       body: json.encode(request.toJson()),
     );
+
     if (response.statusCode == 200) {
       final authResponse = AuthResponse.fromJson(json.decode(response.body));
       await _saveToken(authResponse.token);
       return authResponse;
     } else {
-      throw Exception('Email hoặc mật khẩu không đúng.');
+      throw _handleError(response);
     }
   }
 
@@ -68,7 +85,8 @@ class AuthService {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Không thể lấy thông tin người dùng.');
+      throw _handleError(response);
     }
   }
 }
+

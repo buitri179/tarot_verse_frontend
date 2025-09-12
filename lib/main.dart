@@ -49,7 +49,7 @@ class TarotGalaxyApp extends StatelessWidget {
       ),
       // Đặt màn hình khởi đầu
       routes: {
-        '/': (context) => const LandingPage(),
+        '/': (context) => const LandingScreen(),
         '/auth': (context) => const AuthScreen(),
       },
       initialRoute: '/',

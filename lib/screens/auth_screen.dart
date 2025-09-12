@@ -126,6 +126,18 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           const StarField(),
           Container(color: Colors.black.withOpacity(0.45)),
+          // Nút quay lại trang chủ
+          Positioned(
+            top: 5,
+            left: 5,
+            child: SafeArea(
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                onPressed: () => Navigator.of(context).pop(),
+                tooltip: 'Quay về trang chủ',
+              ),
+            ),
+          ),
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -146,11 +158,14 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(
-                              height: 400,
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                              height: _pageController.positions.isNotEmpty && _pageController.page == 0 ? 380 : 450,
                               child: PageView(
                                 controller: _pageController,
                                 physics: const NeverScrollableScrollPhysics(),
+                                onPageChanged: (page) => setState(() {}),
                                 children: [
                                   _buildLoginForm(),
                                   _buildRegisterForm(),

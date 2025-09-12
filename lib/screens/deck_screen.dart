@@ -401,15 +401,6 @@ class _CosmicLoadingIndicatorState extends State<CosmicLoadingIndicator> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(
-          width: 60,
-          height: 60,
-          child: CircularProgressIndicator(
-            strokeWidth: 3,
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFD700)),
-          ),
-        ),
-        const SizedBox(height: 20),
         SizedBox(
           height: 50,
           child: AnimatedSwitcher(

@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../widgets/star_field.dart';
 import 'deck_screen.dart';
-import 'landing_screen.dart'; // import LandingPage đã sửa
 
 class FormStepsScreen extends StatefulWidget {
   const FormStepsScreen({super.key});
@@ -40,12 +39,7 @@ class _FormStepsScreenState extends State<FormStepsScreen> {
   }
 
   void back() {
-    if (step == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LandingPage()), // Đã sửa tên lớp
-      );
-    } else {
+    if (step > 1) {
       setState(() => step--);
     }
   }
@@ -68,97 +62,67 @@ class _FormStepsScreenState extends State<FormStepsScreen> {
   }
 
   @override
-  void dispose() {
-    nameCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/images/back_ground.jpg',
+          Image.network(
+            'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1471&auto=format&fit=crop',
             fit: BoxFit.cover,
           ),
           const StarField(),
           Container(color: Colors.black.withOpacity(0.45)),
-          SafeArea(
-            child: Column(
-              children: [
-                // AppBar giả lập với nút back
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: back,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'TAROT GALAXY',
-                        style: GoogleFonts.cinzelDecorative(
-                          fontSize: 24,
-                          color: const Color(0xFFFFD700),
-                          shadows: const [
-                            Shadow(
-                              color: Color(0x88FFD700),
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Card(
+                  color: const Color(0xAA000000),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    side: BorderSide(color: Colors.amber.withOpacity(0.2)),
                   ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 1200),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Card(
-                          color: const Color(0xAA000000),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: BorderSide(color: Colors.amber.withOpacity(0.2)),
-                          ),
-                          elevation: 12,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 28,
-                            ),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    'Nhập thông tin của bạn để nhận được lời tiên tri từ các vì sao',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  if (step == 1) _step1(),
-                                  if (step == 2) _step2(),
-                                  if (step == 3) _step3(),
-                                  if (step == 4) _step4(),
-                                ],
-                              ),
-                            ),
+                  elevation: 12,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 28,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'TAROT GALAXY',
+                          style: GoogleFonts.cinzelDecorative(
+                            fontSize: 28,
+                            color: const Color(0xFFFFD700),
+                            shadows: const [
+                              Shadow(
+                                color: Color(0x88FFD700),
+                                blurRadius: 12,
+                              )
+                            ],
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Nhập thông tin của bạn để nhận được lời tiên tri từ các vì sao',
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        if (step == 1) _step1(),
+                        if (step == 2) _step2(),
+                        if (step == 3) _step3(),
+                        if (step == 4) _step4(),
+                      ],
                     ),
                   ),
-                )
-              ],
+                ),
+              ),
             ),
-          ),
+          )
         ],
       ),
     );
