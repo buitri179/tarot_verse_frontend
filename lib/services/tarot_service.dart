@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/tarot_response.dart';
 import '../models/reading_model.dart';
 import '../models/tarot_card.dart';
@@ -45,14 +46,24 @@ class TarotService {
 
   Future<void> saveReading(Reading reading) async {
     try {
+      // First, get the auth token
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+      if (token == null) {
+        throw Exception('Authentication token not found. Please log in.');
+      }
+
       final response = await http.post(
         Uri.parse(_saveEndpoint),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token', // Include the token in the header
+        },
         body: json.encode(reading.toJson()),
       );
 
       if (response.statusCode != 201) {
-        throw Exception('Failed to save reading. Status code: ${response.statusCode}');
+        throw Exception('Failed to save reading. Status code: ${response.statusCode}, Body: ${response.body}');
       }
     } catch (e) {
       print('❌ Error in saveReading: $e');
@@ -62,7 +73,19 @@ class TarotService {
 
   Future<List<Reading>> fetchReadingHistory() async {
     try {
-      final response = await http.get(Uri.parse(_saveEndpoint));
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+      if (token == null) {
+        throw Exception('Authentication token not found. Please log in.');
+      }
+
+      final response = await http.get(
+        Uri.parse(_saveEndpoint),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(utf8.decode(response.bodyBytes));

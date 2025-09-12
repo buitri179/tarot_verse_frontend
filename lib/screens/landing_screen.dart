@@ -5,6 +5,7 @@ import 'package:tarot_verse_frontend/services/auth_service.dart';
 import '../widgets/star_field.dart';
 import 'form_steps.dart';
 import 'card_meaning_screen.dart';
+import 'history_screen.dart'; // Import the new history screen
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
@@ -60,6 +61,10 @@ class _LandingScreenState extends State<LandingScreen> {
         onSelected: (value) {
           if (value == 'logout') {
             _logout();
+          } else if (value == 'history') {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const HistoryScreen()),
+            );
           }
         },
         color: const Color(0xff1B2735),
@@ -68,6 +73,10 @@ class _LandingScreenState extends State<LandingScreen> {
           const PopupMenuItem<String>(
             value: 'logout',
             child: Text('Đăng xuất', style: TextStyle(color: Colors.white)),
+          ),
+          const PopupMenuItem<String>(
+            value: 'history',
+            child: Text('Lịch sử đọc bài', style: TextStyle(color: Colors.white)),
           ),
         ],
       );

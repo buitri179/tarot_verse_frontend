@@ -50,7 +50,7 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
     });
 
     try {
-      final isAuthenticated = await _authService.getCurrentUser() != null; // Đã sửa lỗi: kiểm tra user hiện tại
+      final isAuthenticated = await _authService.getToken() != null;
 
       if (isAuthenticated) {
         await _executeSaveReading();
@@ -101,13 +101,14 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
-              final result = await Navigator.of(context).push(
+              await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => const AuthScreen(),
                 ),
               );
-              if (result == true) {
-                // Nếu đăng nhập thành công từ AuthScreen, tiếp tục lưu
+              // Sau khi quay lại từ AuthScreen, kiểm tra lại trạng thái đăng nhập và thử lưu lại
+              final isLoggedInAfterAuth = await _authService.getToken() != null;
+              if (isLoggedInAfterAuth) {
                 _executeSaveReading();
               }
             },

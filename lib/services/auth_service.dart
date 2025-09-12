@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +10,11 @@ class AuthService {
 
   // Helper để xử lý lỗi từ response
   Exception _handleError(http.Response response) {
+    // Kiểm tra các trường hợp lỗi phổ biến mà không có body JSON
+    if (response.statusCode == 403) {
+      return Exception('Email đã được đăng ký. Vui lòng sử dụng email khác.');
+    }
+
     try {
       // Thử decode JSON từ body của response
       final errorBody = json.decode(response.body);
@@ -18,7 +22,7 @@ class AuthService {
       final errorMessage = errorBody['message'] ?? 'Đã có lỗi xảy ra. Vui lòng thử lại.';
       return Exception(errorMessage);
     } catch (e) {
-      // Nếu không thể parse JSON, trả về lỗi chung
+      // Nếu không thể parse JSON, trả về lỗi chung dựa trên mã trạng thái
       return Exception('Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại đường truyền.');
     }
   }
@@ -35,6 +39,7 @@ class AuthService {
       await _saveToken(authResponse.token);
       return authResponse;
     } else {
+      // Gọi helper để xử lý lỗi cụ thể
       throw _handleError(response);
     }
   }
@@ -89,4 +94,3 @@ class AuthService {
     }
   }
 }
-
