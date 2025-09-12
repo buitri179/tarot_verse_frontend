@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../models/tarot_response.dart';
 import '../widgets/star_field.dart';
 import '../models/tarot_card.dart';
-import 'results_screen.dart';
+import 'package:go_router/go_router.dart';
 import '../services/tarot_service.dart';
 import '../services/tarot_deck_service.dart';
 import '../config.dart';
@@ -252,16 +252,15 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
 
   void _goToResults() {
     if (_drawnCards.isEmpty) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ResultsScreen(
-          selectedCards: _drawnCards,
-          topics: widget.topics,
-          name: widget.name,
-          birthDate: widget.birthDate,
-          gender: widget.gender,
-        ),
-      ),
+    context.go(
+      '/results',
+      extra: {
+        'selectedCards': _drawnCards,
+        'topics': widget.topics,
+        'name': widget.name,
+        'birthDate': widget.birthDate,
+        'gender': widget.gender,
+      },
     );
   }
 }

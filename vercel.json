@@ -1,22 +1,15 @@
 {
+  "version": 2,
   "builds": [
     {
-      "src": "index.html",
-      "use": "@vercel/static-build",
+      "src": "pubspec.yaml",
+      "use": "@vercel/flutter",
       "config": {
-        "buildCommand": "flutter build web --release",
         "outputDirectory": "build/web"
       }
     }
   ],
   "rewrites": [
-    {
-      "source": "/share/reading/:readingId",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/:path((?!api/).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

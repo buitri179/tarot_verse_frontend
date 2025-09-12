@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 import '../widgets/star_field.dart';
 import '../models/tarot_card.dart';
 import '../models/reading_model.dart';
 import '../config.dart';
 import '../services/auth_service.dart';
 import '../services/tarot_service.dart';
-import 'auth_screen.dart';
 
 class ConclusionScreen extends StatefulWidget {
   final List<TarotCardModel> selected;
@@ -34,11 +35,11 @@ class ConclusionScreen extends StatefulWidget {
 class _ConclusionScreenState extends State<ConclusionScreen> {
   final AuthService _authService = AuthService();
   final TarotService _tarotService = TarotService();
-  bool _isReadingSaved = false;
   bool _isLoading = false;
+  int? _savedReadingId;
 
   Future<void> _saveReading() async {
-    if (_isReadingSaved || _isLoading) {
+    if (_savedReadingId != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Kết quả bói đã được lưu rồi.')),
       );
@@ -58,58 +59,67 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
         _showLoginDialog();
       }
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> _executeSaveReading() async {
     try {
-      final reading = Reading(
-        id: 0,
+      final readingToSave = Reading(
         question: widget.topics.join(', '),
-        cards: json.encode(widget.selected.map((c) => c.name).toList()),
+        cards: widget.selected.map((c) => c.name).join(', '),
         interpretation: widget.reading,
         createdAt: DateTime.now(),
       );
-      await _tarotService.saveReading(reading);
-      setState(() {
-        _isReadingSaved = true;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lịch sử bói bài đã được lưu thành công!')),
-      );
+      final savedReading = await _tarotService.saveReading(readingToSave);
+      if (mounted) {
+        setState(() {
+          _savedReadingId = savedReading.id;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Lịch sử bói bài đã được lưu thành công!')),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lưu lịch sử bói thất bại: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Lưu lịch sử bói thất bại: ${e.toString()}')),
+        );
+      }
     }
+  }
+
+  void _shareReading() {
+    if (_savedReadingId == null) return;
+    // IMPORTANT: Replace with your actual Vercel domain
+    const vercelDomain = 'tarot-verse-frontend-wark.vercel.app';
+    final shareUrl = 'https://$vercelDomain/share/reading/$_savedReadingId';
+    Share.share('Xem kết quả bói bài Tarot của tôi tại đây: $shareUrl');
   }
 
   void _showLoginDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Lưu Lịch Sử'),
         content: const Text('Bạn cần đăng nhập để lưu kết quả bói bài. Bạn có muốn đăng nhập ngay không?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('Hủy'),
           ),
           ElevatedButton(
             onPressed: () async {
-              Navigator.of(context).pop();
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const AuthScreen(),
-                ),
-              );
-              // Sau khi quay lại từ AuthScreen, kiểm tra lại trạng thái đăng nhập và thử lưu lại
-              final isLoggedInAfterAuth = await _authService.getToken() != null;
-              if (isLoggedInAfterAuth) {
-                _executeSaveReading();
+              Navigator.of(dialogContext).pop();
+              final result = await context.push('/auth');
+
+              // After returning from AuthScreen, check login status and try saving again
+              if (result == true) {
+                await _executeSaveReading();
               }
             },
             child: const Text('OK'),
@@ -121,6 +131,8 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isReadingSaved = _savedReadingId != null;
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -217,10 +229,13 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 12.0,
+                            runSpacing: 12.0,
                             children: [
-                              ElevatedButton(
+                              ElevatedButton.icon(
+                                icon: const Icon(Icons.refresh),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFFFFD700),
                                   foregroundColor: Colors.black,
@@ -229,44 +244,45 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                                   elevation: 8,
                                   shadowColor: const Color(0x80FFD700),
                                 ),
-                                onPressed: () {
-                                  Navigator.of(context).popUntil((route) => route.isFirst);
-                                },
-                                child: const Text(
+                                onPressed: () => context.go('/'),
+                                label: const Text(
                                   'Bói Lại',
                                   style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              if (!_isReadingSaved)
-                                ElevatedButton(
+                              ElevatedButton.icon(
+                                icon: _isLoading
+                                    ? const SizedBox.shrink()
+                                    : Icon(isReadingSaved ? Icons.check_circle : Icons.save),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isReadingSaved ? Colors.green.withOpacity(0.5) : Colors.transparent,
+                                  foregroundColor: isReadingSaved ? Colors.white : const Color(0xFFFFD700),
+                                  side: isReadingSaved ? null : BorderSide(color: Colors.amber.withOpacity(0.2)),
+                                  shape: const StadiumBorder(),
+                                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                                ),
+                                onPressed: (_isLoading || isReadingSaved) ? null : _saveReading,
+                                label: _isLoading
+                                    ? const CircularProgressIndicator(color: Color(0xFFFFD700))
+                                    : Text(
+                                  isReadingSaved ? 'Đã Lưu' : 'Lưu Kết Quả',
+                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                              if (isReadingSaved)
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.share),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    foregroundColor: const Color(0xFFFFD700),
-                                    side: BorderSide(color: Colors.amber.withOpacity(0.2)),
-                                    shape: const StadiumBorder(),
-                                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                                    elevation: 0,
-                                  ),
-                                  onPressed: _isLoading ? null : _saveReading,
-                                  child: _isLoading
-                                      ? const CircularProgressIndicator(color: Color(0xFFFFD700))
-                                      : const Text(
-                                    'Lưu Kết Quả',
-                                    style: TextStyle(fontWeight: FontWeight.w600),
-                                  ),
-                                )
-                              else
-                                ElevatedButton(
-                                  onPressed: null,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green.withOpacity(0.5),
+                                    backgroundColor: Colors.blueAccent,
                                     foregroundColor: Colors.white,
                                     shape: const StadiumBorder(),
                                     padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                                    elevation: 8,
+                                    shadowColor: Colors.blueAccent.withOpacity(0.5),
                                   ),
-                                  child: const Text(
-                                    'Đã Lưu',
+                                  onPressed: _shareReading,
+                                  label: const Text(
+                                    'Chia sẻ',
                                     style: TextStyle(fontWeight: FontWeight.w600),
                                   ),
                                 ),
