@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tarot_verse_frontend/data/tarot_data.dart';
+import 'package:tarot_verse_frontend/services/auth_service.dart';
+import 'screens/auth_screen.dart';
 import 'screens/landing_screen.dart';
 
-void main() {
+Future<void> main() async {
+  // Đảm bảo Flutter đã được khởi tạo
+  WidgetsFlutterBinding.ensureInitialized();
+  // Tải dữ liệu lá bài từ JSON trước khi chạy ứng dụng
+  await TarotDataService.instance.loadCardsFromJson();
+
+  // Ứng dụng luôn khởi động tại LandingScreen
   runApp(const TarotGalaxyApp());
 }
 
@@ -38,8 +47,12 @@ class TarotGalaxyApp extends StatelessWidget {
         ),
         dialogBackgroundColor: const Color(0xff1B2735),
       ),
-      // Đặt màn hình khởi đầu là LandingScreen
-      home: const LandingScreen(),
+      // Đặt màn hình khởi đầu
+      routes: {
+        '/': (context) => const LandingScreen(),
+        '/auth': (context) => const AuthScreen(),
+      },
+      initialRoute: '/',
     );
   }
 }

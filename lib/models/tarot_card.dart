@@ -1,27 +1,29 @@
+import 'package:flutter/foundation.dart';
+
+@immutable
 class TarotCardModel {
-  final int id;
   final String name;
-  final String image;
-  final Map<String, String> meanings;
+  final String uprightMeaning;
+  final String reversedMeaning;
+  final String description;
+  final String imageUrl;
 
   const TarotCardModel({
-    required this.id,
     required this.name,
-    required this.image,
-    required this.meanings,
+    required this.uprightMeaning,
+    required this.reversedMeaning,
+    required this.description,
+    required this.imageUrl,
   });
 
-  TarotCardModel copyWith({
-    int? id,
-    String? name,
-    String? image,
-    Map<String, String>? meanings,
-  }) {
+  // Factory constructor để tạo một instance từ JSON
+  factory TarotCardModel.fromJson(Map<String, dynamic> json) {
     return TarotCardModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      image: image ?? this.image,
-      meanings: meanings ?? this.meanings,
+      name: json['name'] as String,
+      uprightMeaning: json['uprightMeaning'] as String,
+      reversedMeaning: json['reversedMeaning'] as String,
+      description: json['description'] as String,
+      imageUrl: json['imageUrl'] as String,
     );
   }
 }

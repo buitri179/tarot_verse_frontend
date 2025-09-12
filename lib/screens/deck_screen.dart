@@ -1,10 +1,16 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import '../models/tarot_response.dart';
 import '../widgets/star_field.dart';
 import '../models/tarot_card.dart';
 import 'results_screen.dart';
 import '../services/tarot_service.dart';
+import '../services/tarot_deck_service.dart';
+import '../config.dart';
+import '../data/cosmic_message.dart'; // Đã thêm import
 
 class DeckScreen extends StatefulWidget {
   final List<String> topics;
@@ -33,71 +39,71 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
   bool showCards = false;
   bool showResultButton = false;
 
-  List<TarotCardModel> fetchedCards = [];
+  List<TarotCardModel> _drawnCards = [];
+  TarotResponse? _tarotResponse;
   final TarotService _tarotService = TarotService();
+  final TarotDeckService _deckService = TarotDeckService();
   String? errorMessage;
 
   @override
   void initState() {
     super.initState();
-
     fastSpin = AnimationController(vsync: this, duration: const Duration(seconds: 2));
     slowSpin = AnimationController(vsync: this, duration: const Duration(seconds: 3));
-
     totalAngle = Tween<double>(begin: 0, end: 5 * 2 * pi).animate(
       CurvedAnimation(parent: fastSpin, curve: Curves.easeOut),
     );
-
-    _startSpinningAndFetchCards();
+    _fetchRandomCardsThenAskAI();
   }
 
-  Future<void> _startSpinningAndFetchCards() async {
+  Future<void> _fetchRandomCardsThenAskAI() async {
     await fastSpin.forward();
-
     totalAngle = Tween<double>(
       begin: totalAngle.value,
       end: totalAngle.value + (2 * pi + pi),
     ).animate(CurvedAnimation(parent: slowSpin, curve: Curves.easeOut));
-
     final slowSpinFuture = slowSpin.forward();
 
     try {
-      final fetchedMaps = await _tarotService.getShuffledCards();
-      final fetchedModels = fetchedMaps.map((map) {
-        return TarotCardModel(
-          id: -1,
-          name: map['name']!,
-          image: map['img']!,
-          meanings: {'general': map['meaning']!},
-        );
-      }).toList();
+      final cards = await _deckService.fetchRandomCards();
+      if (!mounted) return;
 
       setState(() {
-        fetchedCards = fetchedModels;
+        _drawnCards = cards;
+        showCards = true;
       });
 
-      await slowSpinFuture;
+      final response = await _tarotService.askTarot(
+        name: widget.name,
+        birthDate: DateFormat('yyyy-MM-dd').format(widget.birthDate),
+        gender: widget.gender,
+        topic: widget.topics.join(', '),
+        cards: cards.map((c) => c.name).toList(),
+      );
 
       if (mounted) {
-        setState(() {
-          isSpinning = false;
-          showCards = true;
-        });
+        setState(() => _tarotResponse = response);
+      }
 
-        await Future.delayed(const Duration(milliseconds: 1500));
-        if (mounted) {
-          setState(() {
-            showResultButton = true;
-          });
-        }
+      await slowSpinFuture;
+      if (!mounted) return;
+
+      setState(() {
+        isSpinning = false;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 1200));
+      if (mounted) {
+        setState(() {
+          showResultButton = true;
+        });
       }
     } catch (e) {
       await slowSpinFuture;
-
       if (mounted) {
         setState(() {
           isSpinning = false;
-          errorMessage = 'Không thể lấy lá bài: $e';
+          errorMessage = 'Không thể lấy kết quả: $e';
         });
       }
     }
@@ -117,16 +123,10 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
         fit: StackFit.expand,
         children: [
           Positioned.fill(
-            child: Image.network(
-              'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1471&auto=format&fit=crop',
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/images/back_ground.jpg', fit: BoxFit.cover),
           ),
           const StarField(),
-          Positioned.fill(
-            child: Container(color: Colors.black.withOpacity(0.45)),
-          ),
-
+          Positioned.fill(child: Container(color: Colors.black.withOpacity(0.45))),
           Positioned(
             top: 24,
             left: 12,
@@ -138,9 +138,8 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
-
           if (isSpinning) _buildSpinningDeck(),
-          if (showCards && !isSpinning) _buildCardsDisplay(),
+          if (showCards && !isSpinning && _drawnCards.isNotEmpty) _buildCardsDisplay(),
           if (errorMessage != null) _buildErrorDisplay(),
         ],
       ),
@@ -151,7 +150,7 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const _LoadingIndicator(),
+        const CosmicLoadingIndicator(), // Đã thay thế
         const SizedBox(height: 40),
         Center(
           child: SizedBox(
@@ -161,12 +160,14 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
               animation: totalAngle,
               builder: (context, _) {
                 final angle = totalAngle.value;
-                final transform = Matrix4.identity()
-                  ..setEntry(3, 2, 0.0015)
-                  ..rotateY(angle);
+                const deckDepth = 78 * 0.8;
                 return Transform(
-                  transform: transform,
                   alignment: Alignment.center,
+                  transform: Matrix4.identity()
+                    ..setEntry(3, 2, 0.0015)
+                    ..multiply(Matrix4.translationValues(0.0, 0.0, -deckDepth / 2))
+                    ..rotateY(angle)
+                    ..multiply(Matrix4.translationValues(0.0, 0.0, deckDepth / 2)),
                   child: const _DeckBox(),
                 );
               },
@@ -177,183 +178,94 @@ class _DeckScreenState extends State<DeckScreen> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildErrorDisplay() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.red, size: 60),
+          const SizedBox(height: 20),
+          Text(
+            errorMessage ?? 'Đã xảy ra lỗi không xác định.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                errorMessage = null;
+                isSpinning = true;
+              });
+              _fetchRandomCardsThenAskAI();
+            },
+            child: const Text('Thử lại'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCardsDisplay() {
+    if (_drawnCards.isEmpty) return const SizedBox.shrink();
+    final drawnCards = _drawnCards;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Text(
-              'Lá bài của bạn đã được chọn',
-              style: GoogleFonts.cinzelDecorative(
-                fontSize: 24,
-                color: const Color(0xFFFFD700),
+        Text(
+          'Các lá bài đã được rút cho bạn',
+          style: GoogleFonts.cinzelDecorative(fontSize: 22, color: const Color(0xFFFFD700)),
+        ),
+        const SizedBox(height: 30),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(drawnCards.length, (index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: _AnimatedCard(
+                card: drawnCards[index],
+                delay: Duration(milliseconds: 300 * index),
               ),
+            );
+          }),
+        ),
+        const SizedBox(height: 40),
+        if (showResultButton)
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFFD700),
+              foregroundColor: Colors.black,
+              shape: const StadiumBorder(),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+              elevation: 10,
+              shadowColor: const Color(0x80FFD700),
+            ),
+            onPressed: _goToResults,
+            child: const Text(
+              'Xem Diễn Giải Chi Tiết',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
-        ),
-        Expanded(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 650),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 280,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: fetchedCards.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final card = entry.value;
-                        return _AnimatedCard(
-                          card: card,
-                          delay: Duration(milliseconds: index * 300),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  AnimatedOpacity(
-                    opacity: showResultButton ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 800),
-                    child: AnimatedSlide(
-                      offset: showResultButton ? Offset.zero : const Offset(0, 0.5),
-                      duration: const Duration(milliseconds: 800),
-                      curve: Curves.easeOutBack,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFFD700),
-                          foregroundColor: Colors.black,
-                          shape: const StadiumBorder(),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 16,
-                          ),
-                          elevation: 12,
-                          shadowColor: const Color(0x80FFD700),
-                        ),
-                        onPressed: showResultButton ? () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ResultsScreen(
-                                selected: fetchedCards,
-                                topics: widget.topics,
-                                name: widget.name,
-                                birthDate: widget.birthDate,
-                                gender: widget.gender,
-                              ),
-                            ),
-                          );
-                        } : null,
-                        child: const Text(
-                          'Xem Kết Quả',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
 
-  Widget _buildErrorDisplay() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Card(
-          color: const Color(0xB0000000),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-            side: BorderSide(color: Colors.redAccent.withOpacity(0.3)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.redAccent,
-                  size: 48,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Đã xảy ra lỗi',
-                  style: GoogleFonts.cinzelDecorative(
-                    fontSize: 22,
-                    color: Colors.redAccent,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  errorMessage!,
-                  style: const TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFD700),
-                    foregroundColor: Colors.black,
-                    shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Quay lại'),
-                ),
-              ],
-            ),
-          ),
+  void _goToResults() {
+    if (_drawnCards.isEmpty) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ResultsScreen(
+          selectedCards: _drawnCards,
+          topics: widget.topics,
+          name: widget.name,
+          birthDate: widget.birthDate,
+          gender: widget.gender,
         ),
       ),
     );
   }
 }
 
-// Widget cho bộ bài đang xoay
-class _DeckBox extends StatelessWidget {
-  const _DeckBox();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: List.generate(20, (i) {
-        return Positioned(
-          top: 25,
-          left: 25,
-          child: Container(
-            width: 200,
-            height: 350,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x88FFD700),
-                  blurRadius: 20,
-                )
-              ],
-              image: const DecorationImage(
-                image: NetworkImage('https://i.imgur.com/JQ9p7xD.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-}
-
-// Widget cho lá bài với animation xuất hiện
 class _AnimatedCard extends StatefulWidget {
   final TarotCardModel card;
   final Duration delay;
@@ -367,8 +279,7 @@ class _AnimatedCard extends StatefulWidget {
   State<_AnimatedCard> createState() => _AnimatedCardState();
 }
 
-class _AnimatedCardState extends State<_AnimatedCard>
-    with SingleTickerProviderStateMixin {
+class _AnimatedCardState extends State<_AnimatedCard> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _opacityAnimation;
@@ -381,21 +292,13 @@ class _AnimatedCardState extends State<_AnimatedCard>
       duration: const Duration(milliseconds: 800),
     );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.3,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
 
-    _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.6),
-    ));
+    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.6)),
+    );
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -415,73 +318,15 @@ class _AnimatedCardState extends State<_AnimatedCard>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: Opacity(
-            opacity: _opacityAnimation.value,
-            child: Container(
-              width: 160,
-              height: 260,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFFFD700).withOpacity(0.4),
-                    blurRadius: 20,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: Image.network(
-                        widget.card.image,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[800],
-                            child: const Icon(
-                              Icons.image_not_supported,
-                              color: Colors.white54,
-                              size: 48,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.8),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
-                        child: Text(
-                          widget.card.name,
-                          style: GoogleFonts.cinzelDecorative(
-                            fontSize: 14,
-                            color: const Color(0xFFFFD700),
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+        return Opacity(
+          opacity: _opacityAnimation.value,
+          child: Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Image.network(
+              '${baseUrl}/${widget.card.imageUrl}',
+              width: 100,
+              height: 180,
+              fit: BoxFit.cover,
             ),
           ),
         );
@@ -490,66 +335,108 @@ class _AnimatedCardState extends State<_AnimatedCard>
   }
 }
 
-// Widget hiển thị loading với text thay đổi
-class _LoadingIndicator extends StatefulWidget {
-  const _LoadingIndicator();
+class _DeckBox extends StatelessWidget {
+  const _DeckBox();
 
   @override
-  State<_LoadingIndicator> createState() => _LoadingIndicatorState();
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Image.asset(
+        'assets/images/back_card.png',
+        width: 100,
+        height: 180,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
 }
 
-class _LoadingIndicatorState extends State<_LoadingIndicator>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _textController;
-  final List<String> _loadingTexts = [
-    'Kết nối với vũ trụ...',
-    'Lắng nghe tiếng thầm của các vì sao...',
-    'Giải mã thông điệp từ thần linh...',
-    'Chuẩn bị lá bài cho bạn...',
-  ];
-  int _currentTextIndex = 0;
+// Widget loading mới có hiệu ứng chuyển đổi thông điệp
+class CosmicLoadingIndicator extends StatefulWidget {
+  const CosmicLoadingIndicator({super.key});
+
+  @override
+  State<CosmicLoadingIndicator> createState() => _CosmicLoadingIndicatorState();
+}
+
+class _CosmicLoadingIndicatorState extends State<CosmicLoadingIndicator> {
+  int _messageIndex = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _textController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    );
+    _startMessageCycle();
+  }
 
-    _textController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        if (mounted) {
-          setState(() {
-            _currentTextIndex = (_currentTextIndex + 1) % _loadingTexts.length;
-          });
-          _textController.reset();
-          _textController.forward();
-        }
+  void _startMessageCycle() {
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
       }
+      setState(() {
+        _messageIndex = (_messageIndex + 1) % cosmicMessages.length;
+      });
     });
-
-    _textController.forward();
   }
 
   @override
   void dispose() {
-    _textController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _textController,
-      child: Text(
-        _loadingTexts[_currentTextIndex],
-        style: GoogleFonts.cinzelDecorative(
-          fontSize: 18,
-          color: const Color(0xFFFFD700),
+    return Column(
+      children: [
+        SizedBox(
+          height: 50,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 800),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, -0.5),
+                    end: const Offset(0, 0),
+                  ).animate(animation),
+                  child: child,
+                ),
+              );
+            },
+            child: Text(
+              cosmicMessages[_messageIndex],
+              key: ValueKey<int>(_messageIndex),
+              textAlign: TextAlign.center,
+              style: GoogleFonts.cinzel(
+                fontSize: 16,
+                fontStyle: FontStyle.italic,
+                color: const Color(0xFFFFD700).withOpacity(0.9),
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.5),
+                    offset: const Offset(1, 1),
+                    blurRadius: 2,
+                  )
+                ],
+              ),
+            ),
+          ),
         ),
-        textAlign: TextAlign.center,
-      ),
+      ],
     );
   }
 }
