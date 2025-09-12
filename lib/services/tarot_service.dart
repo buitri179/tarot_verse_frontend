@@ -8,6 +8,27 @@ import '../models/tarot_card.dart';
 class TarotService {
   static const String _readingEndpoint = 'http://localhost:8080/api/tarot/reading';
   static const String _saveEndpoint = 'http://localhost:8080/api/tarot/readings';
+  static const String _shareEndpoint = 'http://localhost:8080/tarot/api/share'; // New endpoint
+
+  Future<Reading> getSharedReading(String readingId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_shareEndpoint/$readingId'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(utf8.decode(response.bodyBytes));
+        return Reading.fromJson(responseData);
+      } else {
+        final errorBody = utf8.decode(response.bodyBytes);
+        throw Exception('Failed to load shared reading. Status code: ${response.statusCode}, Body: $errorBody');
+      }
+    } catch (e) {
+      print('❌ Error in getSharedReading: $e');
+      throw Exception('An error occurred while fetching the shared reading: $e');
+    }
+  }
 
   Future<TarotResponse> askTarot({
     required String name,
@@ -44,7 +65,7 @@ class TarotService {
     }
   }
 
-  Future<void> saveReading(Reading reading) async {
+  Future<Reading> saveReading(Reading reading) async {
     try {
       // First, get the auth token
       final prefs = await SharedPreferences.getInstance();
@@ -62,7 +83,11 @@ class TarotService {
         body: json.encode(reading.toJson()),
       );
 
-      if (response.statusCode != 201) {
+      if (response.statusCode == 201) {
+        // Decode the response and return the created Reading object
+        final responseData = json.decode(utf8.decode(response.bodyBytes));
+        return Reading.fromJson(responseData);
+      } else {
         throw Exception('Failed to save reading. Status code: ${response.statusCode}, Body: ${response.body}');
       }
     } catch (e) {
