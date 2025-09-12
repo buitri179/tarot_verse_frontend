@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../widgets/star_field.dart';
 import 'deck_screen.dart';
-import 'landing_screen.dart'; // import LandingScreen để back về
+import 'landing_screen.dart'; // import LandingPage đã sửa
 
 class FormStepsScreen extends StatefulWidget {
   const FormStepsScreen({super.key});
@@ -43,7 +43,7 @@ class _FormStepsScreenState extends State<FormStepsScreen> {
     if (step == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LandingScreen()),
+        MaterialPageRoute(builder: (_) => const LandingPage()), // Đã sửa tên lớp
       );
     } else {
       setState(() => step--);

@@ -1,7 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/star_field.dart';
 import '../models/tarot_card.dart';
+import '../models/reading_model.dart';
+import '../config.dart';
+import '../services/auth_service.dart';
+import '../services/tarot_service.dart';
+import 'auth_screen.dart';
 
 class ConclusionScreen extends StatefulWidget {
   final List<TarotCardModel> selected;
@@ -26,6 +32,92 @@ class ConclusionScreen extends StatefulWidget {
 }
 
 class _ConclusionScreenState extends State<ConclusionScreen> {
+  final AuthService _authService = AuthService();
+  final TarotService _tarotService = TarotService();
+  bool _isReadingSaved = false;
+  bool _isLoading = false;
+
+  Future<void> _saveReading() async {
+    if (_isReadingSaved || _isLoading) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Kết quả bói đã được lưu rồi.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final isAuthenticated = await _authService.getCurrentUser() != null; // Đã sửa lỗi: kiểm tra user hiện tại
+
+      if (isAuthenticated) {
+        await _executeSaveReading();
+      } else {
+        _showLoginDialog();
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _executeSaveReading() async {
+    try {
+      final reading = Reading(
+        id: 0,
+        question: widget.topics.join(', '),
+        cards: json.encode(widget.selected.map((c) => c.name).toList()),
+        interpretation: widget.reading,
+        createdAt: DateTime.now(),
+      );
+      await _tarotService.saveReading(reading);
+      setState(() {
+        _isReadingSaved = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lịch sử bói bài đã được lưu thành công!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lưu lịch sử bói thất bại: ${e.toString()}')),
+      );
+    }
+  }
+
+  void _showLoginDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Lưu Lịch Sử'),
+        content: const Text('Bạn cần đăng nhập để lưu kết quả bói bài. Bạn có muốn đăng nhập ngay không?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              final result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const AuthScreen(),
+                ),
+              );
+              if (result == true) {
+                // Nếu đăng nhập thành công từ AuthScreen, tiếp tục lưu
+                _executeSaveReading();
+              }
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +134,6 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
           Positioned.fill(
             child: Container(color: Colors.black.withOpacity(0.45)),
           ),
-
           SafeArea(
             child: Center(
               child: ConstrainedBox(
@@ -60,7 +151,6 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
                         children: [
-                          // Nội dung cuộn được
                           Expanded(
                             child: SingleChildScrollView(
                               child: Column(
@@ -79,8 +169,6 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                   const SizedBox(height: 20),
-
-                                  // Hàng thẻ bài
                                   SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
@@ -90,21 +178,26 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(8),
-                                            child: Image.asset(
-                                              c.imageUrl,
+                                            child: Image.network(
+                                              '$baseUrl/${c.imageUrl}',
                                               width: 150,
                                               height: 240,
                                               fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) {
+                                                return Container(
+                                                  width: 150,
+                                                  height: 240,
+                                                  color: Colors.grey[800],
+                                                  child: const Icon(Icons.image_not_supported, color: Colors.white54),
+                                                );
+                                              },
                                             ),
                                           ),
                                         );
                                       }).toList(),
                                     ),
                                   ),
-
                                   const SizedBox(height: 20),
-
-                                  // Ô kết quả bói
                                   Container(
                                     width: double.infinity,
                                     padding: const EdgeInsets.all(16),
@@ -122,10 +215,7 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 20),
-
-                          // Nút hành động (luôn cố định cuối)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -147,23 +237,38 @@ class _ConclusionScreenState extends State<ConclusionScreen> {
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  foregroundColor: const Color(0xFFFFD700),
-                                  side: BorderSide(color: Colors.amber.withOpacity(0.2)),
-                                  shape: const StadiumBorder(),
-                                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                                  elevation: 0,
+                              if (!_isReadingSaved)
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    foregroundColor: const Color(0xFFFFD700),
+                                    side: BorderSide(color: Colors.amber.withOpacity(0.2)),
+                                    shape: const StadiumBorder(),
+                                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                                    elevation: 0,
+                                  ),
+                                  onPressed: _isLoading ? null : _saveReading,
+                                  child: _isLoading
+                                      ? const CircularProgressIndicator(color: Color(0xFFFFD700))
+                                      : const Text(
+                                    'Lưu Kết Quả',
+                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                )
+                              else
+                                ElevatedButton(
+                                  onPressed: null,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green.withOpacity(0.5),
+                                    foregroundColor: Colors.white,
+                                    shape: const StadiumBorder(),
+                                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                                  ),
+                                  child: const Text(
+                                    'Đã Lưu',
+                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                  ),
                                 ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text(
-                                  'Quay lại',
-                                  style: TextStyle(fontWeight: FontWeight.w600),
-                                ),
-                              ),
                             ],
                           ),
                         ],

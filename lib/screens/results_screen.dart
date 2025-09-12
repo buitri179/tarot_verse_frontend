@@ -6,6 +6,7 @@ import '../models/tarot_card.dart';
 import '../services/tarot_service.dart';
 import '../models/tarot_response.dart';
 import 'conclusion_screen.dart';
+import '../config.dart';
 
 class ResultsScreen extends StatefulWidget {
   final List<TarotCardModel> selectedCards;
@@ -47,6 +48,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         birthDate: DateFormat('yyyy-MM-dd').format(widget.birthDate),
         gender: widget.gender,
         topic: widget.topics.join(', '),
+        cards: widget.selectedCards.map((c) => c.name).toList(),
       );
 
       if (mounted) {
@@ -89,21 +91,15 @@ class _ResultsScreenState extends State<ResultsScreen> {
     final card = widget.selectedCards[_currentIndex];
     final isFirst = _currentIndex == 0;
     final isLast = _currentIndex == widget.selectedCards.length - 1;
-
-    // Lấy diễn giải chi tiết cho lá bài hiện tại từ API
     final isApiLoading = _apiResponse == null;
-    final apiDetail =
-        _apiResponse?.cardsDetail?[card.name] ?? 'Chưa có diễn giải từ AI.';
+    final apiDetail = _apiResponse?.cardsDetail?[card.name] ?? 'Chưa có diễn giải từ AI.';
 
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
           Positioned.fill(
-            child: Image.asset(
-              'assets/images/back_ground.jpg',
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/images/back_ground.jpg', fit: BoxFit.cover),
           ),
           const StarField(),
           Container(color: Colors.black.withOpacity(0.45)),
@@ -125,7 +121,6 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Header navigation
                           Row(
                             children: [
                               TextButton.icon(
@@ -145,44 +140,41 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               if (!isFirst)
                                 IconButton(
                                   icon: const Icon(Icons.chevron_left, size: 36),
-                                  onPressed: () =>
-                                      setState(() => _currentIndex--),
+                                  onPressed: () => setState(() => _currentIndex--),
                                   color: const Color(0xFFFFD700),
                                 ),
                               if (!isLast)
                                 IconButton(
                                   icon: const Icon(Icons.chevron_right, size: 36),
-                                  onPressed: () =>
-                                      setState(() => _currentIndex++),
+                                  onPressed: () => setState(() => _currentIndex++),
                                   color: const Color(0xFFFFD700),
                                 ),
                             ],
                           ),
                           const SizedBox(height: 8),
-                          // Nội dung lá bài
                           Flexible(
                             child: LayoutBuilder(
                               builder: (context, constraints) {
                                 final isNarrow = constraints.maxWidth < 800;
                                 return Flex(
-                                  direction: isNarrow
-                                      ? Axis.vertical
-                                      : Axis.horizontal,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  direction: isNarrow ? Axis.vertical : Axis.horizontal,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(
-                                      width: isNarrow
-                                          ? double.infinity
-                                          : constraints.maxWidth * 0.45,
+                                      width: isNarrow ? double.infinity : constraints.maxWidth * 0.45,
                                       child: AspectRatio(
                                         aspectRatio: 200 / 350,
                                         child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.asset(
-                                            card.imageUrl,
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: Image.network(
+                                            '${baseUrl}/${card.imageUrl}', // đã sửa
                                             fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[800],
+                                                child: const Icon(Icons.image_not_supported, color: Colors.white54),
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),
@@ -193,16 +185,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                         padding: const EdgeInsets.all(20),
                                         decoration: BoxDecoration(
                                           color: const Color(0xB0000000),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                            color: Colors.amber.withOpacity(0.2),
-                                          ),
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: Colors.amber.withOpacity(0.2)),
                                         ),
                                         child: SingleChildScrollView(
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
@@ -229,7 +217,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                                       ),
                                                       const SizedBox(width: 12),
                                                       Text(
-                                                        'AI đang diễn giải...',
+                                                        'Đang kết nối với năng lượng của vũ trụ...',
                                                         style: TextStyle(
                                                           fontStyle: FontStyle.italic,
                                                           color: Colors.white.withOpacity(0.7),
@@ -241,55 +229,38 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                               else
                                                 Text(
                                                   apiDetail,
-                                                  style: const TextStyle(
-                                                      fontSize: 16, height: 1.5),
+                                                  style: const TextStyle(fontSize: 16, height: 1.5),
                                                 ),
                                               const SizedBox(height: 12),
                                               if (isLast)
                                                 Align(
                                                   alignment: Alignment.centerRight,
                                                   child: ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          const Color(0xFFFFD700),
-                                                      foregroundColor:
-                                                          Colors.black,
-                                                      shape:
-                                                          const StadiumBorder(),
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        horizontal: 24,
-                                                        vertical: 14,
-                                                      ),
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: const Color(0xFFFFD700),
+                                                      foregroundColor: Colors.black,
+                                                      shape: const StadiumBorder(),
+                                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                                                       elevation: 10,
-                                                      shadowColor:
-                                                          const Color(0x80FFD700),
+                                                      shadowColor: const Color(0x80FFD700),
                                                     ),
                                                     onPressed: () {
                                                       Navigator.of(context).push(
                                                         MaterialPageRoute(
-                                                          builder: (_) =>
-                                                              ConclusionScreen(
-                                                                selected: widget
-                                                                    .selectedCards,
-                                                                topics: widget.topics,
-                                                                name: widget.name,
-                                                                birthDate: widget
-                                                                    .birthDate,
-                                                                gender: widget.gender,
-                                                                reading: _apiResponse
-                                                                        ?.conclusion ??
-                                                                    'Không có kết quả.',
-                                                              ),
+                                                          builder: (_) => ConclusionScreen(
+                                                            selected: widget.selectedCards,
+                                                            topics: widget.topics,
+                                                            name: widget.name,
+                                                            birthDate: widget.birthDate,
+                                                            gender: widget.gender,
+                                                            reading: _apiResponse?.conclusion ?? 'Không có kết quả.',
+                                                          ),
                                                         ),
                                                       );
                                                     },
                                                     child: const Text(
                                                       'Xem Kết Luận',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600),
+                                                      style: TextStyle(fontWeight: FontWeight.w600),
                                                     ),
                                                   ),
                                                 ),
